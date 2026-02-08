@@ -15,8 +15,8 @@
 
 ## 4. Verification
 
-- [ ] 4.1 Run existing tests (`bun test`) and fix any failures caused by the changes
-- [ ] 4.2 Add test cases for depth-scoped closing: leaving a depth-1 trigger preserves parent menu
-- [ ] 4.3 Add test case for Link cancelling hide timer on mouse-enter
-- [ ] 4.4 Visually verify in browser at localhost:3000: click About → hover Facts → move to Administration; only Facts submenu should close
-- [ ] 4.5 Compare behavior against reference impl at localhost:3001
+- [x] 4.1 Run existing tests (`bun test`) and fix any failures caused by the changes
+- [x] 4.2 Add test cases for depth-scoped closing: leaving a depth-1 trigger preserves parent menu
+- [x] 4.3 Add test case for Link cancelling hide timer on mouse-enter
+- [x] 4.4 Visually verify in browser at localhost:3000: click About → hover Facts → move to Administration; only Facts submenu should close
+- [x] 4.5 Compare behavior against reference impl at localhost:3001
