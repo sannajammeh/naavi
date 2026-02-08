@@ -5,6 +5,9 @@
   "module": "dist/index.js",
   "devDependencies": {
     "@base-ui/react": "^1.1.0",
+    "@happy-dom/global-registrator": "^20.5.2",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bun": "latest",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",

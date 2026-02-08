@@ -257,17 +257,19 @@ export function Trigger({ children, render, ...otherProps }: TriggerProps) {
     }
   }, [ctx, value, depth]);
 
-  // 6.3 — Hover: mouseleave starts hide timer
+  // 6.3 — Hover: mouseleave starts hide timer (depth-scoped)
   const handleMouseLeave = useCallback(() => {
     if (ctx.hideTimeout.current) {
       clearTimeout(ctx.hideTimeout.current);
     }
     ctx.hideTimeout.current = setTimeout(() => {
-      ctx.setOpenPath([]);
-      ctx.setArmed(false);
+      ctx.setOpenPath(ctx.openPath.slice(0, depth));
+      if (depth === 0) {
+        ctx.setArmed(false);
+      }
       ctx.hideTimeout.current = null;
     }, ctx.hideDelay);
-  }, [ctx]);
+  }, [ctx, depth]);
 
   const defaultProps: Record<string, unknown> = {
     id: triggerId,
@@ -317,17 +319,19 @@ export function Content({ children, render, "aria-label": ariaLabel, ...otherPro
     }
   }, [ctx]);
 
-  // 6.3 — Hover leave: start hide timer
+  // 6.3 — Hover leave: start hide timer (depth-scoped)
   const handleMouseLeave = useCallback(() => {
     if (ctx.hideTimeout.current) {
       clearTimeout(ctx.hideTimeout.current);
     }
     ctx.hideTimeout.current = setTimeout(() => {
-      ctx.setOpenPath([]);
-      ctx.setArmed(false);
+      ctx.setOpenPath(ctx.openPath.slice(0, depth));
+      if (depth === 0) {
+        ctx.setArmed(false);
+      }
       ctx.hideTimeout.current = null;
     }, ctx.hideDelay);
-  }, [ctx]);
+  }, [ctx, depth]);
 
   const defaultProps: Record<string, unknown> = {
     id: contentId,
@@ -369,6 +373,7 @@ export function Content({ children, render, "aria-label": ariaLabel, ...otherPro
 
 export function Link({ children, render, closeOnClick: linkCloseOnClick, ...otherProps }: LinkProps) {
   const ctx = useRoot();
+  const { depth } = useDepth();
 
   const shouldClose = linkCloseOnClick ?? ctx.closeOnClick;
 
@@ -383,11 +388,24 @@ export function Link({ children, render, closeOnClick: linkCloseOnClick, ...othe
     [ctx, shouldClose],
   );
 
+  // Cancel pending hide timer and close submenus deeper than this link
+  const handleMouseEnter = useCallback(() => {
+    if (ctx.hideTimeout.current) {
+      clearTimeout(ctx.hideTimeout.current);
+      ctx.hideTimeout.current = null;
+    }
+    // Close any submenus deeper than this link's depth
+    if (ctx.openPath.length > depth) {
+      ctx.setOpenPath(ctx.openPath.slice(0, depth));
+    }
+  }, [ctx, depth]);
+
   const defaultProps: Record<string, unknown> = {
     role: "menuitem",
     tabIndex: -1,
     [LINK_ATTR]: "",
     onClick: handleClick,
+    onMouseEnter: handleMouseEnter,
     children,
   };
 
