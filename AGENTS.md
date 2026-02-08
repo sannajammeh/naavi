@@ -1,15 +1,5 @@
 # AGENTS.md — navigation-menu
 
-## MANDATORY: Use td for Task Management
-
-Run td usage --new-session at conversation start (or after /clear). This tells you what to work on next.
-
-Sessions are automatic (based on terminal/agent context). Optional:
-- td session "name" to label the current session
-- td session --new to force a new session in the same context
-
-Use td usage -q after first read.
-
 > Instructions for AI coding agents operating in this repository.
 
 ## Project Overview
@@ -190,6 +180,26 @@ src/
 tests/
   <feature>.test.ts     # Integration tests
 ```
+
+## Frontend Verification (MANDATORY)
+
+When doing any frontend work (components, styles, layout, interactions), you
+**must** visually confirm your changes using the `agent-browser` skill. Do not
+consider frontend work complete until you have verified it in the browser.
+
+Two dev servers are always running:
+
+| URL                  | Purpose                                          |
+|----------------------|--------------------------------------------------|
+| `localhost:3000`     | Playground app — example/demo usage              |
+| `localhost:3001`     | WAI-ARIA specification reference implementation  |
+
+**Workflow:**
+1. Make your code changes.
+2. Use `agent-browser` to open `localhost:3000` and visually verify the result.
+3. Compare behavior against the reference implementation at `localhost:3001`
+   when implementing or fixing accessibility/ARIA patterns.
+4. Only mark the task as complete after browser confirmation.
 
 ### Do NOT
 
