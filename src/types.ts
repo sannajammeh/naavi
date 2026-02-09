@@ -17,7 +17,6 @@ export interface OpenState {
 export interface RootContextValue {
   openPath: string[];
   setOpenPath: (path: string[]) => void;
-  openOnHover: boolean | undefined;
   armed: boolean;
   setArmed: (armed: boolean) => void;
   hideDelay: number;
@@ -27,6 +26,10 @@ export interface RootContextValue {
   navRef: RefObject<HTMLElement | null>;
   viewport: HTMLElement | null;
   setViewport: (el: HTMLElement | null) => void;
+}
+
+export interface SettingsContextValue {
+  openOnHover: boolean | undefined;
 }
 
 export interface DepthContextValue {
@@ -77,12 +80,26 @@ export interface ItemProps extends useRender.ComponentProps<"li"> {
 
 export interface TriggerProps extends useRender.ComponentProps<"a", OpenState> {
   children: React.ReactNode;
+  /**
+   * Override cascading openOnHover for this trigger only.
+   * - `true`: always open on hover
+   * - `false`: never open on hover
+   * - `undefined`: inherit from nearest SettingsContext
+   */
+  openOnHover?: boolean;
 }
 
 export interface ContentProps extends useRender.ComponentProps<"ul", OpenState> {
   children: React.ReactNode;
   /** Accessible label for the submenu. */
   "aria-label"?: string;
+  /**
+   * Override cascading openOnHover for all triggers within this content.
+   * - `true`: triggers inside always open on hover
+   * - `false`: triggers inside never open on hover
+   * - `undefined`: inherit from nearest ancestor SettingsContext
+   */
+  openOnHover?: boolean;
 }
 
 export interface LinkProps extends useRender.ComponentProps<"a"> {

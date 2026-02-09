@@ -28,4 +28,5 @@ export type {
   RootContextValue,
   DepthContextValue,
   ItemContextValue,
+  SettingsContextValue,
 } from "./types.ts";

@@ -15,9 +15,11 @@ import {
   RootContext,
   DepthContext,
   ItemContext,
+  SettingsContext,
   useRoot,
   useDepth,
   useItem,
+  useSettings,
 } from "./context.ts";
 import { useMenuKeyboard } from "./keyboard.ts";
 import {
@@ -41,6 +43,7 @@ import type {
   ViewportProps,
   PortalProps,
   RootContextValue,
+  SettingsContextValue,
   OpenState,
 } from "./types.ts";
 
@@ -96,7 +99,6 @@ export function Root({
     () => ({
       openPath,
       setOpenPath,
-      openOnHover,
       armed: effectiveArmed,
       setArmed,
       hideDelay,
@@ -110,7 +112,6 @@ export function Root({
     [
       openPath,
       setOpenPath,
-      openOnHover,
       effectiveArmed,
       setArmed,
       hideDelay,
@@ -118,6 +119,11 @@ export function Root({
       hideOnBlur,
       viewport,
     ],
+  );
+
+  const settings: SettingsContextValue = useMemo(
+    () => ({ openOnHover }),
+    [openOnHover],
   );
 
   const onKeyDown = useMenuKeyboard({ ctx });
@@ -173,9 +179,11 @@ export function Root({
 
   return (
     <RootContext.Provider value={ctx}>
-      <nav ref={navRef} onKeyDown={onKeyDown} {...navProps}>
-        {children}
-      </nav>
+      <SettingsContext.Provider value={settings}>
+        <nav ref={navRef} onKeyDown={onKeyDown} {...navProps}>
+          {children}
+        </nav>
+      </SettingsContext.Provider>
     </RootContext.Provider>
   );
 }
@@ -243,10 +251,17 @@ export function Item({
 // 5.4 — Trigger
 // ---------------------------------------------------------------------------
 
-export function Trigger({ children, render, ...otherProps }: TriggerProps) {
+export function Trigger({
+  children,
+  render,
+  openOnHover: openOnHoverProp,
+  ...otherProps
+}: TriggerProps) {
   const ctx = useRoot();
   const { value } = useItem();
   const { depth } = useDepth();
+  const settings = useSettings();
+  const effectiveOpenOnHover = openOnHoverProp ?? settings.openOnHover;
 
   const isOpen = ctx.openPath[depth] === value;
   const state: OpenState = { open: isOpen };
@@ -277,11 +292,13 @@ export function Trigger({ children, render, ...otherProps }: TriggerProps) {
       clearTimeout(ctx.hideTimeout.current);
       ctx.hideTimeout.current = null;
     }
-    if (ctx.armed || ctx.openPath.length > 0) {
+    // effectiveOpenOnHover: true = always hover, false = never hover, undefined = armed state
+    if (effectiveOpenOnHover === false) return;
+    if (effectiveOpenOnHover === true || ctx.armed || ctx.openPath.length > 0) {
       const next = [...ctx.openPath.slice(0, depth), value];
       ctx.setOpenPath(next);
     }
-  }, [ctx, value, depth]);
+  }, [ctx, value, depth, effectiveOpenOnHover]);
 
   // 6.3 — Hover: mouseleave starts hide timer (depth-scoped)
   const handleMouseLeave = useCallback(() => {
@@ -330,11 +347,13 @@ export function Content({
   children,
   render,
   "aria-label": ariaLabel,
+  openOnHover,
   ...otherProps
 }: ContentProps) {
   const ctx = useRoot();
   const { value } = useItem();
   const { depth } = useDepth();
+  const inheritedSettings = useSettings();
 
   const isOpen = ctx.openPath[depth] === value;
   const state: OpenState = { open: isOpen };
@@ -384,10 +403,23 @@ export function Content({
     props: mergeProps<"ul">(defaultProps, otherProps),
   });
 
-  const content = (
+  const hasSettingsOverride = openOnHover !== undefined;
+  const settingsOverride: SettingsContextValue | null = hasSettingsOverride
+    ? { openOnHover }
+    : null;
+
+  const inner = (
     <DepthContext.Provider value={{ depth: depth + 1, parentValue: value }}>
       {element}
     </DepthContext.Provider>
+  );
+
+  const content = settingsOverride ? (
+    <SettingsContext.Provider value={settingsOverride}>
+      {inner}
+    </SettingsContext.Provider>
+  ) : (
+    inner
   );
 
   // If viewport exists, portal into it (only for depth 0 content)

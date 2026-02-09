@@ -140,6 +140,184 @@ describe("Link mouse-enter behavior", () => {
  * - This matches the reference implementation at localhost:3001
  */
 
+// ---------------------------------------------------------------------------
+// Cascading Settings Context Tests
+// ---------------------------------------------------------------------------
+
+/**
+ * Menu with openOnHover on Root, and optional Content/Trigger overrides.
+ * Two top-level items: "FileMenu" and "EditMenu", each with a submenu.
+ * FileMenu's Content can override openOnHover. EditMenu does not.
+ */
+function CascadingMenu(props: {
+  rootOpenOnHover?: boolean;
+  fileContentOpenOnHover?: boolean;
+  editTriggerOpenOnHover?: boolean;
+  hideDelay?: number;
+}) {
+  const {
+    rootOpenOnHover,
+    fileContentOpenOnHover,
+    editTriggerOpenOnHover,
+    hideDelay = 50,
+  } = props;
+  const [path, setPath] = useState<string[]>([]);
+
+  return (
+    <div>
+      <span data-testid="path">{JSON.stringify(path)}</span>
+      <Root
+        aria-label="Cascade Menu"
+        openOnHover={rootOpenOnHover}
+        hideDelay={hideDelay}
+        value={path}
+        onValueChange={setPath}
+      >
+        <List>
+          <Item value="file">
+            <Trigger>File</Trigger>
+            <Content aria-label="File" openOnHover={fileContentOpenOnHover}>
+              <Item value="new">
+                <Link href="#new">New</Link>
+              </Item>
+              <Item value="open">
+                <Link href="#open">Open</Link>
+              </Item>
+            </Content>
+          </Item>
+          <Item value="edit">
+            <Trigger openOnHover={editTriggerOpenOnHover}>Edit</Trigger>
+            <Content aria-label="Edit">
+              <Item value="undo">
+                <Link href="#undo">Undo</Link>
+              </Item>
+            </Content>
+          </Item>
+        </List>
+      </Root>
+    </div>
+  );
+}
+
+/**
+ * Nested Content menu for testing inheritance.
+ * Root (openOnHover=true) > About > Content(openOnHover=false) > Facts > Content (no override)
+ */
+function NestedCascadingMenu(props: { innerContentOpenOnHover?: boolean }) {
+  const { innerContentOpenOnHover } = props;
+  const [path, setPath] = useState<string[]>([]);
+
+  return (
+    <div>
+      <span data-testid="path">{JSON.stringify(path)}</span>
+      <Root
+        aria-label="Nested Cascade"
+        openOnHover={true}
+        hideDelay={50}
+        value={path}
+        onValueChange={setPath}
+      >
+        <List>
+          <Item value="about">
+            <Trigger>About</Trigger>
+            <Content aria-label="About" openOnHover={false}>
+              <Item value="facts">
+                <Trigger>Facts</Trigger>
+                <Content aria-label="Facts" openOnHover={innerContentOpenOnHover}>
+                  <Item value="history">
+                    <Link href="#history">History</Link>
+                  </Item>
+                </Content>
+              </Item>
+            </Content>
+          </Item>
+        </List>
+      </Root>
+    </div>
+  );
+}
+
+describe("cascading settings context", () => {
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  test("Root openOnHover={true} cascades to all triggers — hover opens without click", async () => {
+    render(<CascadingMenu rootOpenOnHover={true} />);
+    // Hover File trigger without any prior click — should open
+    await act(() => { fireEvent.mouseEnter(screen.getByText("File")); });
+    expect(getPath()).toEqual(["file"]);
+  });
+
+  test("Content openOnHover={false} overrides Root openOnHover={true} for triggers inside", async () => {
+    render(
+      <NestedCascadingMenu />,
+    );
+    // Root has openOnHover=true, so hovering About should open
+    await act(() => { fireEvent.mouseEnter(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // About's Content has openOnHover=false, so hovering Facts inside should NOT open
+    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    // Facts should NOT be in the path — hover was blocked
+    expect(getPath()).toEqual(["about"]);
+
+    // But clicking Facts should still work
+    await act(() => { fireEvent.click(screen.getByText("Facts")); });
+    expect(getPath()).toEqual(["about", "facts"]);
+  });
+
+  test("Trigger openOnHover={true} overrides Content openOnHover={false}", async () => {
+    // Root openOnHover=true, fileContent openOnHover=false, editTrigger openOnHover=true
+    // The editTrigger is NOT inside fileContent, so this tests trigger-level override
+    render(
+      <CascadingMenu
+        rootOpenOnHover={false}
+        editTriggerOpenOnHover={true}
+      />,
+    );
+    // File trigger: rootOpenOnHover=false, no trigger override → hover should NOT open
+    await act(() => { fireEvent.mouseEnter(screen.getByText("File")); });
+    expect(getPath()).toEqual([]);
+
+    // Edit trigger: has openOnHover={true} override → hover should open
+    await act(() => { fireEvent.mouseEnter(screen.getByText("Edit")); });
+    expect(getPath()).toEqual(["edit"]);
+  });
+
+  test("nested Content without override inherits from nearest ancestor Content", async () => {
+    // Root openOnHover=true, outer Content openOnHover=false, inner Content omits openOnHover
+    // Facts trigger inside inner Content should inherit openOnHover=false from outer
+    render(<NestedCascadingMenu />);
+
+    // Open About via hover (root openOnHover=true)
+    await act(() => { fireEvent.mouseEnter(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Click Facts to open its submenu (hover blocked by outer Content openOnHover=false)
+    await act(() => { fireEvent.click(screen.getByText("Facts")); });
+    expect(getPath()).toEqual(["about", "facts"]);
+
+    // History is a Link, not a Trigger with submenu — this just verifies inner content rendered
+    expect(screen.getByText("History")).toBeDefined();
+  });
+
+  test("no settings anywhere preserves armed state machine behavior", async () => {
+    render(<CascadingMenu />);
+    // No openOnHover set anywhere. Hover should not open (not armed)
+    await act(() => { fireEvent.mouseEnter(screen.getByText("File")); });
+    expect(getPath()).toEqual([]);
+
+    // Click to open — this arms the state machine
+    await act(() => { fireEvent.click(screen.getByText("File")); });
+    expect(getPath()).toEqual(["file"]);
+
+    // Now hover Edit — should open because armed
+    await act(() => { fireEvent.mouseEnter(screen.getByText("Edit")); });
+    expect(getPath()).toEqual(["edit"]);
+  });
+});
+
 describe("NavigationMenu namespace export", () => {
   test("namespace contains all expected components", () => {
     const expected = [

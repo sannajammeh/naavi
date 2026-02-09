@@ -637,8 +637,14 @@ export function Page() {
             <Code lang="tsx">{BASIC_EXAMPLE}</Code>
 
             {/* Why */}
-            <h2># Why this?</h2>
+            <h2># Why?</h2>
             <ul className="features">
+              <li>
+                123 kB → 42.8 kB gzip — built on{" "}
+                <code>@base-ui/react</code>, not around it
+              </li>
+              <li>SEO safe rendering cycle</li>
+              <li>Respects native behaviour</li>
               <li>
                 Full{" "}
                 <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/">
@@ -646,11 +652,6 @@ export function Page() {
                 </a>{" "}
                 pattern
               </li>
-              <li>
-                Keyboard: arrows, Home/End, Escape, Enter/Space, character
-                search
-              </li>
-              <li>Hover arm/disarm state machine with configurable delay</li>
               <li>Nested submenus with depth-aware focus management</li>
               <li>
                 Polymorphic rendering via <code>@base-ui/react</code> useRender
@@ -792,14 +793,15 @@ export function Page() {
             <ExampleTabs
               label="Full"
               preview={<LiveFull />}
-              code={`<NavigationMenu.Root aria-label="Main">
+              code={`<NavigationMenu.Root openOnHover={true} aria-label="Main">
   <NavigationMenu.List>
     <NavigationMenu.Item value="home">
       <NavigationMenu.Link href="/home">Home</NavigationMenu.Link>
     </NavigationMenu.Item>
     <NavigationMenu.Item value="about">
       <NavigationMenu.Trigger>About</NavigationMenu.Trigger>
-      <NavigationMenu.Content aria-label="About">
+      {/* Submenus require click — override root openOnHover */}
+      <NavigationMenu.Content openOnHover={false} aria-label="About">
         <NavigationMenu.Item value="team">
           <NavigationMenu.Trigger>Team</NavigationMenu.Trigger>
           <NavigationMenu.Content aria-label="Team">
@@ -1065,6 +1067,25 @@ export function Page() {
               </tbody>
             </table>
 
+            <h3>## Trigger</h3>
+            <table className="api-table">
+              <thead>
+                <tr>
+                  <th>Prop</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <PropRow
+                  name="openOnHover"
+                  type="boolean | undefined"
+                  desc="Override cascading openOnHover for this trigger only. true = always hover, false = never, undefined = inherit from nearest SettingsContext."
+                />
+              </tbody>
+            </table>
+
             <h3>## Content</h3>
             <table className="api-table">
               <thead>
@@ -1080,6 +1101,11 @@ export function Page() {
                   name="aria-label"
                   type="string"
                   desc="Accessible label for the submenu."
+                />
+                <PropRow
+                  name="openOnHover"
+                  type="boolean | undefined"
+                  desc="Override cascading openOnHover for all triggers within this content subtree."
                 />
               </tbody>
             </table>

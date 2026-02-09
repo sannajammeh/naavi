@@ -4,6 +4,7 @@ import type {
   RootContextValue,
   DepthContextValue,
   ItemContextValue,
+  SettingsContextValue,
 } from "./types.ts";
 
 // ---------------------------------------------------------------------------
@@ -16,6 +17,9 @@ export const DepthContext = createContext<DepthContextValue>({
   parentValue: null,
 });
 export const ItemContext = createContext<ItemContextValue | null>(null);
+export const SettingsContext = createContext<SettingsContextValue>({
+  openOnHover: undefined,
+});
 
 // ---------------------------------------------------------------------------
 // Consumer hooks
@@ -43,4 +47,8 @@ export function useItem(): ItemContextValue {
     );
   }
   return ctx;
+}
+
+export function useSettings(): SettingsContextValue {
+  return useContext(SettingsContext);
 }
