@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 (2026-02-09)
+
+### Bug Fixes
+
+* fix submenu close bug ([eeb67ab](https://github.com/sannajammeh/naavi/commit/eeb67ab2703a708f9e095b5fe9f40ec002ce43d1))
+* hover close issue ([a54a259](https://github.com/sannajammeh/naavi/commit/a54a259f73c38cc9ccec81fea814b022c3dccc13))
+
 ## 0.1.0 (2026-02-09)
 
 Initial release.
