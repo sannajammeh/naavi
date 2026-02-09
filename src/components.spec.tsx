@@ -3,6 +3,8 @@ import { describe, test, expect, beforeEach } from "bun:test";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 
 import { Root, List, Item, Trigger, Content, Link } from "./components.tsx";
+import * as NavigationMenu from "./components.tsx";
+import { NavigationMenu as NavigationMenuFromIndex } from "./index.ts";
 
 /**
  * Controlled wrapper to inspect openPath via onValueChange.
@@ -137,3 +139,38 @@ describe("Link mouse-enter behavior", () => {
  * - Click About → hover Facts → hover Administration → Facts closes, About stays open
  * - This matches the reference implementation at localhost:3001
  */
+
+describe("NavigationMenu namespace export", () => {
+  test("namespace contains all expected components", () => {
+    const expected = [
+      "Root",
+      "List",
+      "Item",
+      "Trigger",
+      "Content",
+      "Link",
+      "Separator",
+      "Viewport",
+      "Portal",
+    ];
+    for (const name of expected) {
+      expect(
+        typeof (NavigationMenu as Record<string, unknown>)[name],
+      ).toBe("function");
+    }
+  });
+
+  test("namespace components are identical references to named exports", () => {
+    expect(NavigationMenu.Root).toBe(Root);
+    expect(NavigationMenu.List).toBe(List);
+    expect(NavigationMenu.Item).toBe(Item);
+    expect(NavigationMenu.Trigger).toBe(Trigger);
+    expect(NavigationMenu.Content).toBe(Content);
+    expect(NavigationMenu.Link).toBe(Link);
+  });
+
+  test("index re-exports the same namespace object", () => {
+    expect(NavigationMenuFromIndex.Root).toBe(Root);
+    expect(NavigationMenuFromIndex).toBe(NavigationMenu);
+  });
+});

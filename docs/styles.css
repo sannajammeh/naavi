@@ -260,19 +260,7 @@ a {
    ========================================================================== */
 
 .example-wrapper {
-  margin: 1.5rem 0 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
   overflow: visible;
-}
-
-.example-label {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  padding: 0.4rem 0.75rem;
-  background: var(--bg-code);
-  border-bottom: 1px solid var(--border);
-  border-radius: 4px 4px 0 0;
 }
 
 /* Nav root inside examples */
@@ -385,6 +373,84 @@ a {
 .example-wrapper [data-navi-content] .navi-arrow {
   fill: #888;
   margin-left: auto;
+}
+
+/* ==========================================================================
+   Details/Summary Tabs (CSS-only, inspired by digitalpowertools.com)
+   ========================================================================== */
+
+.example-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.example-tabs > details {
+  display: contents;
+}
+
+.example-tabs > details > div {
+  order: 1;
+  width: 100%;
+  border-top: 1px solid var(--border);
+}
+
+.example-tabs > details::details-content {
+  order: 1;
+  width: 100%;
+}
+
+.example-tabs > details > summary {
+  order: 0;
+  display: block;
+  cursor: pointer;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  background: var(--bg-code);
+  border-right: 1px solid var(--border);
+  user-select: none;
+}
+
+.example-tabs > details > summary::-webkit-details-marker,
+.example-tabs > details > summary::marker {
+  display: none;
+}
+
+.example-tabs > details[open] > summary {
+  pointer-events: none;
+  color: var(--text);
+  background: var(--bg);
+  z-index: 1;
+  margin-bottom: -1px;
+}
+
+/* Tab content areas */
+.example-tabs .tab-preview {
+  padding: 0;
+}
+
+.example-tabs .tab-preview nav {
+  border-radius: 0;
+}
+
+.example-tabs .tab-code {
+  padding: 0;
+}
+
+.example-tabs .tab-code .code-block {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.example-tabs .tab-css .code-block {
+  margin: 0;
+  border: none;
+  border-radius: 0;
 }
 
 /* Footer */

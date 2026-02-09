@@ -12,9 +12,9 @@ import {
   Separator,
 } from "../src/index.ts";
 
-const INSTALL_CMD = "bun add navi";
+const INSTALL_CMD = "bun add naavi";
 
-const BASIC_EXAMPLE = `import { Root, List, Item, Trigger, Content, Link } from "navi"
+const BASIC_EXAMPLE = `import { Root, List, Item, Trigger, Content, Link } from "naavi"
 
 function Nav() {
   return (
@@ -24,7 +24,7 @@ function Nav() {
           <Link href="/">Home</Link>
         </Item>
         <Item value="about">
-          <Trigger>About ▾</Trigger>
+          <Trigger>About</Trigger>
           <Content aria-label="About">
             <Item value="team">
               <Link href="/team">Team</Link>
@@ -39,11 +39,123 @@ function Nav() {
   )
 }`;
 
+// ---------------------------------------------------------------------------
+// Minimal CSS snippets for each example pattern
+// ---------------------------------------------------------------------------
+
+const CSS_LINKS_ONLY = `/* Links only — horizontal bar */
+[role="menubar"] {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[role="menuitem"] {
+  padding: .5rem .85rem;
+  color: inherit;
+  text-decoration: none;
+}`;
+
+const CSS_DROPDOWN = `/* Dropdown — menubar + one level of submenus */
+[role="menubar"] {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[role="menuitem"] {
+  padding: .5rem .85rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Position submenus below trigger */
+[role="menubar"] > [role="none"] {
+  position: relative;
+}
+
+[data-navi-content] {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: .25rem 0;
+  min-width: 160px;
+}
+
+[data-navi-content][data-state="closed"] { display: none; }
+[data-navi-content][data-state="open"]   { display: block; }`;
+
+const CSS_NESTED = `/* Nested — adds flyout submenus to the right */
+[data-navi-content] [role="none"] {
+  position: relative;
+}
+
+[data-navi-content] [data-navi-content] {
+  top: 0;
+  left: 100%;
+}`;
+
+const CSS_SEPARATOR = `/* Separator — thin line between groups */
+[role="separator"] {
+  height: 1px;
+  background: #ddd;
+  margin: .25rem 0;
+  list-style: none;
+}`;
+
+const CSS_FULL = `/* Full — all patterns combined (minimal) */
+[role="menubar"] {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+[role="menuitem"] {
+  padding: .5rem .85rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+[role="menubar"] > [role="none"] { position: relative; }
+[data-navi-content] [role="none"] { position: relative; }
+
+[data-navi-content] {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: .25rem 0;
+  min-width: 160px;
+}
+
+[data-navi-content][data-state="closed"] { display: none; }
+[data-navi-content][data-state="open"]   { display: block; }
+
+/* Nested: flyout right */
+[data-navi-content] [data-navi-content] {
+  top: 0;
+  left: 100%;
+}
+
+/* Separator */
+[role="separator"] {
+  height: 1px;
+  background: #ddd;
+  margin: .25rem 0;
+  list-style: none;
+}`;
+
 const NESTED_EXAMPLE = `<Item value="products">
-  <Trigger>Products ▾</Trigger>
+  <Trigger>Products</Trigger>
   <Content aria-label="Products">
     <Item value="software">
-      <Trigger>Software ▸</Trigger>
+      <Trigger>Software</Trigger>
       <Content aria-label="Software">
         <Item value="ide">
           <Link href="/ide">IDE</Link>
@@ -55,7 +167,7 @@ const NESTED_EXAMPLE = `<Item value="products">
     </Item>
     <Separator />
     <Item value="docs">
-      <Link href="/docs">Documentation</Link>
+      <Link href="/docs">Docs</Link>
     </Item>
   </Content>
 </Item>`;
@@ -72,7 +184,7 @@ const CONTROLLED_EXAMPLE = `function ControlledNav() {
   )
 }`;
 
-const POLYMORPHIC_EXAMPLE = `import { Root, List, Item, Link } from "navi"
+const POLYMORPHIC_EXAMPLE = `import { Item, Link } from "naavi"
 import NextLink from "next/link"
 
 <Item value="about">
@@ -121,10 +233,9 @@ function RightArrow() {
 // Live examples (SSR'd — renders real HTML with ARIA roles + data attrs)
 // ---------------------------------------------------------------------------
 
-function ExampleBasic() {
+function LiveBasic() {
   return (
     <div className="example-wrapper">
-      <div className="example-label">Basic — links only, no dropdowns</div>
       <Root aria-label="Basic example">
         <List>
           <Item value="home">
@@ -142,10 +253,9 @@ function ExampleBasic() {
   );
 }
 
-function ExampleDropdown() {
+function LiveDropdown() {
   return (
     <div className="example-wrapper">
-      <div className="example-label">Dropdown — single level submenu</div>
       <Root aria-label="Dropdown example">
         <List>
           <Item value="home">
@@ -163,9 +273,6 @@ function ExampleDropdown() {
               <Item value="automation">
                 <Link href="#automation">Automation</Link>
               </Item>
-              <Item value="integrations">
-                <Link href="#integrations">Integrations</Link>
-              </Item>
             </Content>
           </Item>
           <Item value="pricing">
@@ -177,10 +284,9 @@ function ExampleDropdown() {
   );
 }
 
-function ExampleNested() {
+function LiveNested() {
   return (
     <div className="example-wrapper">
-      <div className="example-label">Nested — multi-level with submenus</div>
       <Root aria-label="Nested example">
         <List>
           <Item value="home">
@@ -192,28 +298,22 @@ function ExampleNested() {
               <DownArrow />
             </Trigger>
             <Content aria-label="Docs">
-              <Item value="getting-started">
-                <Link href="#getting-started">Getting Started</Link>
+              <Item value="guide">
+                <Link href="#guide">Guide</Link>
               </Item>
               <Item value="api">
                 <Trigger href="#api">
-                  API Reference
+                  API
                   <RightArrow />
                 </Trigger>
-                <Content aria-label="API Reference">
+                <Content aria-label="API">
                   <Item value="components">
                     <Link href="#components">Components</Link>
                   </Item>
                   <Item value="hooks">
                     <Link href="#hooks">Hooks</Link>
                   </Item>
-                  <Item value="types">
-                    <Link href="#types">Types</Link>
-                  </Item>
                 </Content>
-              </Item>
-              <Item value="examples">
-                <Link href="#examples">Examples</Link>
               </Item>
             </Content>
           </Item>
@@ -226,10 +326,9 @@ function ExampleNested() {
   );
 }
 
-function ExampleSeparators() {
+function LiveSeparators() {
   return (
     <div className="example-wrapper">
-      <div className="example-label">Separators — grouped menu items</div>
       <Root aria-label="Separator example">
         <List>
           <Item value="file">
@@ -244,15 +343,9 @@ function ExampleSeparators() {
               <Item value="open">
                 <Link href="#open">Open</Link>
               </Item>
-              <Item value="save">
-                <Link href="#save">Save</Link>
-              </Item>
               <Separator />
               <Item value="export">
                 <Link href="#export">Export</Link>
-              </Item>
-              <Item value="print">
-                <Link href="#print">Print</Link>
               </Item>
             </Content>
           </Item>
@@ -265,23 +358,14 @@ function ExampleSeparators() {
               <Item value="undo">
                 <Link href="#undo">Undo</Link>
               </Item>
-              <Item value="redo">
-                <Link href="#redo">Redo</Link>
-              </Item>
               <Separator />
               <Item value="cut">
                 <Link href="#cut">Cut</Link>
-              </Item>
-              <Item value="copy">
-                <Link href="#copy">Copy</Link>
               </Item>
               <Item value="paste">
                 <Link href="#paste">Paste</Link>
               </Item>
             </Content>
-          </Item>
-          <Item value="help">
-            <Link href="#help">Help</Link>
           </Item>
         </List>
       </Root>
@@ -289,10 +373,9 @@ function ExampleSeparators() {
   );
 }
 
-function ExampleKitchenSink() {
+function LiveFull() {
   return (
     <div className="example-wrapper">
-      <div className="example-label">Full — everything combined</div>
       <Root aria-label="Full example">
         <List>
           <Item value="home">
@@ -304,23 +387,17 @@ function ExampleKitchenSink() {
               <DownArrow />
             </Trigger>
             <Content aria-label="About">
-              <Item value="overview">
-                <Link href="#overview">Overview</Link>
-              </Item>
               <Item value="team">
                 <Trigger href="#team">
                   Team
                   <RightArrow />
                 </Trigger>
                 <Content aria-label="Team">
-                  <Item value="engineering">
-                    <Link href="#engineering">Engineering</Link>
+                  <Item value="eng">
+                    <Link href="#eng">Engineering</Link>
                   </Item>
                   <Item value="design">
                     <Link href="#design">Design</Link>
-                  </Item>
-                  <Item value="product">
-                    <Link href="#product">Product</Link>
                   </Item>
                 </Content>
               </Item>
@@ -339,9 +416,6 @@ function ExampleKitchenSink() {
               <Item value="consulting">
                 <Link href="#consulting">Consulting</Link>
               </Item>
-              <Item value="development">
-                <Link href="#development">Development</Link>
-              </Item>
               <Item value="support">
                 <Link href="#support">Support</Link>
               </Item>
@@ -359,6 +433,50 @@ function ExampleKitchenSink() {
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Details/Summary tabs (CSS-only, no JS)
+// ---------------------------------------------------------------------------
+
+let tabGroupCounter = 0;
+
+function ExampleTabs({
+  preview,
+  code,
+  css,
+  label,
+}: {
+  preview: React.ReactNode;
+  code: string;
+  css: string;
+  label: string;
+}) {
+  const group = `example-tabs-${++tabGroupCounter}`;
+  return (
+    <div className="example-tabs">
+      <details name={group} open>
+        <summary>{label}</summary>
+        <div className="tab-preview">{preview}</div>
+      </details>
+      <details name={group}>
+        <summary>Code</summary>
+        <div className="tab-code">
+          <pre className="code-block">
+            <code>{code}</code>
+          </pre>
+        </div>
+      </details>
+      <details name={group}>
+        <summary>CSS</summary>
+        <div className="tab-css">
+          <pre className="code-block">
+            <code>{css}</code>
+          </pre>
+        </div>
+      </details>
+    </div>
+  );
+}
 
 function Terminal({ children }: { children: string }) {
   return (
@@ -407,7 +525,7 @@ export function Page() {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>navi</title>
+        <title>naavi</title>
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body>
@@ -416,14 +534,14 @@ export function Page() {
             <span className="logo">◆</span>
             <a
               className="header-link"
-              href="https://github.com/skala-org/navi"
+              href="https://github.com/sannajammeh/naavi"
             >
               README.md ↗
             </a>
           </header>
 
           <main>
-            <h1 className="title">navi</h1>
+            <h1 className="title">naavi</h1>
             <p className="subtitle">
               WAI-ARIA compliant navigation menu for React — full keyboard
               navigation, hover state machine, nested submenus.
@@ -462,15 +580,16 @@ export function Page() {
             {/* Examples */}
             <h2># Examples</h2>
             <p className="section-desc">
-              Live rendered examples. These are actual navi components
+              Live rendered examples. These are actual naavi components
               server-rendered with their real ARIA roles and data attributes.
               Open the playground at <code>localhost:3000</code> for interactive
               demos with keyboard and hover.
             </p>
 
-            <ExampleBasic />
-
-            <Code lang="tsx">{`<Root aria-label="Main">
+            <ExampleTabs
+              label="Links only"
+              preview={<LiveBasic />}
+              code={`<Root aria-label="Main">
   <List>
     <Item value="home">
       <Link href="/home">Home</Link>
@@ -482,17 +601,20 @@ export function Page() {
       <Link href="/contact">Contact</Link>
     </Item>
   </List>
-</Root>`}</Code>
+</Root>`}
+              css={CSS_LINKS_ONLY}
+            />
 
-            <ExampleDropdown />
-
-            <Code lang="tsx">{`<Root aria-label="Main">
+            <ExampleTabs
+              label="Dropdown"
+              preview={<LiveDropdown />}
+              code={`<Root aria-label="Main">
   <List>
     <Item value="home">
       <Link href="/home">Home</Link>
     </Item>
     <Item value="products">
-      <Trigger>Products ▾</Trigger>
+      <Trigger>Products</Trigger>
       <Content aria-label="Products">
         <Item value="analytics">
           <Link href="/analytics">Analytics</Link>
@@ -500,51 +622,137 @@ export function Page() {
         <Item value="automation">
           <Link href="/automation">Automation</Link>
         </Item>
-        <Item value="integrations">
-          <Link href="/integrations">Integrations</Link>
-        </Item>
       </Content>
     </Item>
     <Item value="pricing">
       <Link href="/pricing">Pricing</Link>
     </Item>
   </List>
-</Root>`}</Code>
+</Root>`}
+              css={CSS_DROPDOWN}
+            />
 
-            <ExampleNested />
-
-            <Code lang="tsx">{`<Item value="docs">
-  <Trigger>Docs ▾</Trigger>
-  <Content aria-label="Docs">
-    <Item value="getting-started">
-      <Link href="/getting-started">Getting Started</Link>
+            <ExampleTabs
+              label="Nested"
+              preview={<LiveNested />}
+              code={`<Root aria-label="Main">
+  <List>
+    <Item value="home">
+      <Link href="/home">Home</Link>
     </Item>
-    <Item value="api">
-      <Trigger>API Reference ▸</Trigger>
-      <Content aria-label="API Reference">
-        <Item value="components">
-          <Link href="/components">Components</Link>
+    <Item value="docs">
+      <Trigger>Docs</Trigger>
+      <Content aria-label="Docs">
+        <Item value="guide">
+          <Link href="/guide">Guide</Link>
         </Item>
-        <Item value="hooks">
-          <Link href="/hooks">Hooks</Link>
+        <Item value="api">
+          <Trigger>API</Trigger>
+          <Content aria-label="API">
+            <Item value="components">
+              <Link href="/components">Components</Link>
+            </Item>
+            <Item value="hooks">
+              <Link href="/hooks">Hooks</Link>
+            </Item>
+          </Content>
         </Item>
       </Content>
     </Item>
-  </Content>
-</Item>`}</Code>
+    <Item value="blog">
+      <Link href="/blog">Blog</Link>
+    </Item>
+  </List>
+</Root>`}
+              css={CSS_NESTED}
+            />
 
-            <ExampleSeparators />
+            <ExampleTabs
+              label="Separators"
+              preview={<LiveSeparators />}
+              code={`<Root aria-label="Main">
+  <List>
+    <Item value="file">
+      <Trigger>File</Trigger>
+      <Content aria-label="File">
+        <Item value="new">
+          <Link href="/new">New</Link>
+        </Item>
+        <Item value="open">
+          <Link href="/open">Open</Link>
+        </Item>
+        <Separator />
+        <Item value="export">
+          <Link href="/export">Export</Link>
+        </Item>
+      </Content>
+    </Item>
+    <Item value="edit">
+      <Trigger>Edit</Trigger>
+      <Content aria-label="Edit">
+        <Item value="undo">
+          <Link href="/undo">Undo</Link>
+        </Item>
+        <Separator />
+        <Item value="cut">
+          <Link href="/cut">Cut</Link>
+        </Item>
+        <Item value="paste">
+          <Link href="/paste">Paste</Link>
+        </Item>
+      </Content>
+    </Item>
+  </List>
+</Root>`}
+              css={CSS_SEPARATOR}
+            />
 
-            <Code lang="tsx">{`<Content aria-label="File">
-  <Item value="new"><Link href="/new">New</Link></Item>
-  <Item value="open"><Link href="/open">Open</Link></Item>
-  <Item value="save"><Link href="/save">Save</Link></Item>
-  <Separator />
-  <Item value="export"><Link href="/export">Export</Link></Item>
-  <Item value="print"><Link href="/print">Print</Link></Item>
-</Content>`}</Code>
-
-            <ExampleKitchenSink />
+            <ExampleTabs
+              label="Full"
+              preview={<LiveFull />}
+              code={`<Root aria-label="Main">
+  <List>
+    <Item value="home">
+      <Link href="/home">Home</Link>
+    </Item>
+    <Item value="about">
+      <Trigger>About</Trigger>
+      <Content aria-label="About">
+        <Item value="team">
+          <Trigger>Team</Trigger>
+          <Content aria-label="Team">
+            <Item value="eng">
+              <Link href="/eng">Engineering</Link>
+            </Item>
+            <Item value="design">
+              <Link href="/design">Design</Link>
+            </Item>
+          </Content>
+        </Item>
+        <Separator />
+        <Item value="careers">
+          <Link href="/careers">Careers</Link>
+        </Item>
+      </Content>
+    </Item>
+    <Item value="services">
+      <Trigger>Services</Trigger>
+      <Content aria-label="Services">
+        <Item value="consulting">
+          <Link href="/consulting">Consulting</Link>
+        </Item>
+        <Item value="support">
+          <Link href="/support">Support</Link>
+        </Item>
+      </Content>
+    </Item>
+    <Item value="contact">
+      <Link href="/contact">Contact</Link>
+    </Item>
+  </List>
+</Root>`}
+              css={CSS_FULL}
+            />
 
             {/* Components */}
             <h2># Components</h2>

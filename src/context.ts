@@ -25,7 +25,7 @@ export function useRoot(): RootContextValue {
   const ctx = useContext(RootContext);
   if (ctx === null) {
     throw new Error(
-      "Navi: useRoot() must be used within a <Root> component.",
+      "Naavi: useRoot() must be used within a <Root> component.",
     );
   }
   return ctx;
@@ -39,7 +39,7 @@ export function useItem(): ItemContextValue {
   const ctx = useContext(ItemContext);
   if (ctx === null) {
     throw new Error(
-      "Navi: useItem() must be used within an <Item> component.",
+      "Naavi: useItem() must be used within an <Item> component.",
     );
   }
   return ctx;

@@ -1,17 +1,17 @@
-# navi
+# naavi
 
 WAI-ARIA compliant navigation menu components for React. Full keyboard navigation, hover state machine, nested submenus, and polymorphic rendering.
 
 ## Install
 
 ```bash
-bun add navi
+bun add naavi
 ```
 
 ## Quick Start
 
 ```tsx
-import { Root, List, Item, Trigger, Content, Link } from "navi"
+import { Root, List, Item, Trigger, Content, Link } from "naavi"
 
 function Nav() {
   return (
@@ -115,16 +115,59 @@ function Nav() {
 
 ## Styling
 
-Style with data attributes — no className conflicts, no CSS-in-JS required.
+Style with data attributes — no className conflicts, no CSS-in-JS required. Here's the minimal CSS to get a working dropdown menu:
 
 ```css
-[data-navi-content][data-state="open"] { display: block; }
-[data-navi-content][data-state="closed"] { display: none; }
+[role="menubar"] {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
+[role="menuitem"] {
+  padding: .5rem .85rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+[role="menubar"] > [role="none"] { position: relative; }
+
+[data-navi-content] {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: .25rem 0;
+  min-width: 160px;
+}
+
+[data-navi-content][data-state="closed"] { display: none; }
+[data-navi-content][data-state="open"]   { display: block; }
+
+/* Nested submenus: flyout right */
+[data-navi-content] [role="none"] { position: relative; }
+[data-navi-content] [data-navi-content] { top: 0; left: 100%; }
+
+/* Separator */
+[role="separator"] {
+  height: 1px;
+  background: #ddd;
+  margin: .25rem 0;
+  list-style: none;
+}
+```
+
+All available data attributes:
+
+```css
 [data-navi-trigger] { }
 [data-navi-content] { }
 [data-navi-link] { }
 [data-navi-viewport] { }
+[data-state="open"] { }
+[data-state="closed"] { }
 ```
 
 ## Polymorphic Rendering
@@ -132,7 +175,7 @@ Style with data attributes — no className conflicts, no CSS-in-JS required.
 All components accept a `render` prop via `@base-ui/react` useRender:
 
 ```tsx
-import { Item, Link } from "navi"
+import { Item, Link } from "naavi"
 import NextLink from "next/link"
 
 <Item value="about">

@@ -1,3 +1,5 @@
+import * as NavigationMenu from "./components.tsx";
+
 export {
   Root,
   List,
@@ -9,6 +11,8 @@ export {
   Viewport,
   Portal,
 } from "./components.tsx";
+
+export { NavigationMenu };
 
 export type {
   RootProps,
