@@ -2,40 +2,32 @@
 // Docs page — SSR'd React component (bunchee-it style)
 // ---------------------------------------------------------------------------
 
-import {
-  Root,
-  List,
-  Item,
-  Trigger,
-  Content,
-  Link,
-  Separator,
-} from "../src/index.ts";
+import { NavigationMenu } from "../src/index.ts";
 
 const INSTALL_CMD = "bun add naavi";
 
-const BASIC_EXAMPLE = `import { Root, List, Item, Trigger, Content, Link } from "naavi"
+const BASIC_EXAMPLE = `import { NavigationMenu } from "naavi"
 
 function Nav() {
   return (
-    <Root aria-label="Main">
-      <List>
-        <Item value="home">
-          <Link href="/">Home</Link>
-        </Item>
-        <Item value="about">
-          <Trigger>About</Trigger>
-          <Content aria-label="About">
-            <Item value="team">
-              <Link href="/team">Team</Link>
-            </Item>
-            <Item value="blog">
-              <Link href="/blog">Blog</Link>
-            </Item>
-          </Content>
-        </Item>
-      </List>
-    </Root>
+    <NavigationMenu.Root aria-label="Main">
+      <NavigationMenu.List>
+        <NavigationMenu.Item value="home">
+          <NavigationMenu.Link href="/">Home</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="about">
+          <NavigationMenu.Trigger>About</NavigationMenu.Trigger>
+          <NavigationMenu.Content aria-label="About">
+            <NavigationMenu.Item value="team">
+              <NavigationMenu.Link href="/team">Team</NavigationMenu.Link>
+            </NavigationMenu.Item>
+            <NavigationMenu.Item value="blog">
+              <NavigationMenu.Link href="/blog">Blog</NavigationMenu.Link>
+            </NavigationMenu.Item>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+      </NavigationMenu.List>
+    </NavigationMenu.Root>
   )
 }`;
 
@@ -151,47 +143,47 @@ const CSS_FULL = `/* Full — all patterns combined (minimal) */
   list-style: none;
 }`;
 
-const NESTED_EXAMPLE = `<Item value="products">
-  <Trigger>Products</Trigger>
-  <Content aria-label="Products">
-    <Item value="software">
-      <Trigger>Software</Trigger>
-      <Content aria-label="Software">
-        <Item value="ide">
-          <Link href="/ide">IDE</Link>
-        </Item>
-        <Item value="cli">
-          <Link href="/cli">CLI Tools</Link>
-        </Item>
-      </Content>
-    </Item>
-    <Separator />
-    <Item value="docs">
-      <Link href="/docs">Docs</Link>
-    </Item>
-  </Content>
-</Item>`;
+const NESTED_EXAMPLE = `<NavigationMenu.Item value="products">
+  <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
+  <NavigationMenu.Content aria-label="Products">
+    <NavigationMenu.Item value="software">
+      <NavigationMenu.Trigger>Software</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="Software">
+        <NavigationMenu.Item value="ide">
+          <NavigationMenu.Link href="/ide">IDE</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="cli">
+          <NavigationMenu.Link href="/cli">CLI Tools</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Separator />
+    <NavigationMenu.Item value="docs">
+      <NavigationMenu.Link href="/docs">Docs</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.Content>
+</NavigationMenu.Item>`;
 
 const CONTROLLED_EXAMPLE = `function ControlledNav() {
   const [path, setPath] = useState<string[]>([])
 
   return (
-    <Root value={path} onValueChange={setPath}>
-      <List>
+    <NavigationMenu.Root value={path} onValueChange={setPath}>
+      <NavigationMenu.List>
         {/* ... */}
-      </List>
-    </Root>
+      </NavigationMenu.List>
+    </NavigationMenu.Root>
   )
 }`;
 
-const POLYMORPHIC_EXAMPLE = `import { Item, Link } from "naavi"
+const POLYMORPHIC_EXAMPLE = `import { NavigationMenu } from "naavi"
 import NextLink from "next/link"
 
-<Item value="about">
-  <Link render={<NextLink href="/about" />}>
+<NavigationMenu.Item value="about">
+  <NavigationMenu.Link render={<NextLink href="/about" />}>
     About
-  </Link>
-</Item>`;
+  </NavigationMenu.Link>
+</NavigationMenu.Item>`;
 
 // ---------------------------------------------------------------------------
 // Sub-components
@@ -236,19 +228,19 @@ function RightArrow() {
 function LiveBasic() {
   return (
     <div className="example-wrapper">
-      <Root aria-label="Basic example">
-        <List>
-          <Item value="home">
-            <Link href="#home">Home</Link>
-          </Item>
-          <Item value="about">
-            <Link href="#about">About</Link>
-          </Item>
-          <Item value="contact">
-            <Link href="#contact">Contact</Link>
-          </Item>
-        </List>
-      </Root>
+      <NavigationMenu.Root aria-label="Basic example">
+        <NavigationMenu.List>
+          <NavigationMenu.Item value="home">
+            <NavigationMenu.Link href="#home">Home</NavigationMenu.Link>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="about">
+            <NavigationMenu.Link href="#about">About</NavigationMenu.Link>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="contact">
+            <NavigationMenu.Link href="#contact">Contact</NavigationMenu.Link>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>
     </div>
   );
 }
@@ -256,30 +248,30 @@ function LiveBasic() {
 function LiveDropdown() {
   return (
     <div className="example-wrapper">
-      <Root aria-label="Dropdown example">
-        <List>
-          <Item value="home">
-            <Link href="#home">Home</Link>
-          </Item>
-          <Item value="products">
-            <Trigger href="#products">
+      <NavigationMenu.Root aria-label="Dropdown example">
+        <NavigationMenu.List>
+          <NavigationMenu.Item value="home">
+            <NavigationMenu.Link href="#home">Home</NavigationMenu.Link>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="products">
+            <NavigationMenu.Trigger href="#products">
               Products
               <DownArrow />
-            </Trigger>
-            <Content aria-label="Products">
-              <Item value="analytics">
-                <Link href="#analytics">Analytics</Link>
-              </Item>
-              <Item value="automation">
-                <Link href="#automation">Automation</Link>
-              </Item>
-            </Content>
-          </Item>
-          <Item value="pricing">
-            <Link href="#pricing">Pricing</Link>
-          </Item>
-        </List>
-      </Root>
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="Products">
+              <NavigationMenu.Item value="analytics">
+                <NavigationMenu.Link href="#analytics">Analytics</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="automation">
+                <NavigationMenu.Link href="#automation">Automation</NavigationMenu.Link>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="pricing">
+            <NavigationMenu.Link href="#pricing">Pricing</NavigationMenu.Link>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>
     </div>
   );
 }
@@ -287,41 +279,41 @@ function LiveDropdown() {
 function LiveNested() {
   return (
     <div className="example-wrapper">
-      <Root aria-label="Nested example">
-        <List>
-          <Item value="home">
-            <Link href="#home">Home</Link>
-          </Item>
-          <Item value="docs">
-            <Trigger href="#docs">
+      <NavigationMenu.Root aria-label="Nested example">
+        <NavigationMenu.List>
+          <NavigationMenu.Item value="home">
+            <NavigationMenu.Link href="#home">Home</NavigationMenu.Link>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="docs">
+            <NavigationMenu.Trigger href="#docs">
               Docs
               <DownArrow />
-            </Trigger>
-            <Content aria-label="Docs">
-              <Item value="guide">
-                <Link href="#guide">Guide</Link>
-              </Item>
-              <Item value="api">
-                <Trigger href="#api">
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="Docs">
+              <NavigationMenu.Item value="guide">
+                <NavigationMenu.Link href="#guide">Guide</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="api">
+                <NavigationMenu.Trigger href="#api">
                   API
                   <RightArrow />
-                </Trigger>
-                <Content aria-label="API">
-                  <Item value="components">
-                    <Link href="#components">Components</Link>
-                  </Item>
-                  <Item value="hooks">
-                    <Link href="#hooks">Hooks</Link>
-                  </Item>
-                </Content>
-              </Item>
-            </Content>
-          </Item>
-          <Item value="blog">
-            <Link href="#blog">Blog</Link>
-          </Item>
-        </List>
-      </Root>
+                </NavigationMenu.Trigger>
+                <NavigationMenu.Content aria-label="API">
+                  <NavigationMenu.Item value="components">
+                    <NavigationMenu.Link href="#components">Components</NavigationMenu.Link>
+                  </NavigationMenu.Item>
+                  <NavigationMenu.Item value="hooks">
+                    <NavigationMenu.Link href="#hooks">Hooks</NavigationMenu.Link>
+                  </NavigationMenu.Item>
+                </NavigationMenu.Content>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="blog">
+            <NavigationMenu.Link href="#blog">Blog</NavigationMenu.Link>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>
     </div>
   );
 }
@@ -329,46 +321,46 @@ function LiveNested() {
 function LiveSeparators() {
   return (
     <div className="example-wrapper">
-      <Root aria-label="Separator example">
-        <List>
-          <Item value="file">
-            <Trigger href="#file">
+      <NavigationMenu.Root aria-label="Separator example">
+        <NavigationMenu.List>
+          <NavigationMenu.Item value="file">
+            <NavigationMenu.Trigger href="#file">
               File
               <DownArrow />
-            </Trigger>
-            <Content aria-label="File">
-              <Item value="new">
-                <Link href="#new">New</Link>
-              </Item>
-              <Item value="open">
-                <Link href="#open">Open</Link>
-              </Item>
-              <Separator />
-              <Item value="export">
-                <Link href="#export">Export</Link>
-              </Item>
-            </Content>
-          </Item>
-          <Item value="edit">
-            <Trigger href="#edit">
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="File">
+              <NavigationMenu.Item value="new">
+                <NavigationMenu.Link href="#new">New</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="open">
+                <NavigationMenu.Link href="#open">Open</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Separator />
+              <NavigationMenu.Item value="export">
+                <NavigationMenu.Link href="#export">Export</NavigationMenu.Link>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="edit">
+            <NavigationMenu.Trigger href="#edit">
               Edit
               <DownArrow />
-            </Trigger>
-            <Content aria-label="Edit">
-              <Item value="undo">
-                <Link href="#undo">Undo</Link>
-              </Item>
-              <Separator />
-              <Item value="cut">
-                <Link href="#cut">Cut</Link>
-              </Item>
-              <Item value="paste">
-                <Link href="#paste">Paste</Link>
-              </Item>
-            </Content>
-          </Item>
-        </List>
-      </Root>
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="Edit">
+              <NavigationMenu.Item value="undo">
+                <NavigationMenu.Link href="#undo">Undo</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Separator />
+              <NavigationMenu.Item value="cut">
+                <NavigationMenu.Link href="#cut">Cut</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="paste">
+                <NavigationMenu.Link href="#paste">Paste</NavigationMenu.Link>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>
     </div>
   );
 }
@@ -376,56 +368,56 @@ function LiveSeparators() {
 function LiveFull() {
   return (
     <div className="example-wrapper">
-      <Root aria-label="Full example">
-        <List>
-          <Item value="home">
-            <Link href="#home">Home</Link>
-          </Item>
-          <Item value="about">
-            <Trigger href="#about">
+      <NavigationMenu.Root aria-label="Full example">
+        <NavigationMenu.List>
+          <NavigationMenu.Item value="home">
+            <NavigationMenu.Link href="#home">Home</NavigationMenu.Link>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="about">
+            <NavigationMenu.Trigger href="#about">
               About
               <DownArrow />
-            </Trigger>
-            <Content aria-label="About">
-              <Item value="team">
-                <Trigger href="#team">
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="About">
+              <NavigationMenu.Item value="team">
+                <NavigationMenu.Trigger href="#team">
                   Team
                   <RightArrow />
-                </Trigger>
-                <Content aria-label="Team">
-                  <Item value="eng">
-                    <Link href="#eng">Engineering</Link>
-                  </Item>
-                  <Item value="design">
-                    <Link href="#design">Design</Link>
-                  </Item>
-                </Content>
-              </Item>
-              <Separator />
-              <Item value="careers">
-                <Link href="#careers">Careers</Link>
-              </Item>
-            </Content>
-          </Item>
-          <Item value="services">
-            <Trigger href="#services">
+                </NavigationMenu.Trigger>
+                <NavigationMenu.Content aria-label="Team">
+                  <NavigationMenu.Item value="eng">
+                    <NavigationMenu.Link href="#eng">Engineering</NavigationMenu.Link>
+                  </NavigationMenu.Item>
+                  <NavigationMenu.Item value="design">
+                    <NavigationMenu.Link href="#design">Design</NavigationMenu.Link>
+                  </NavigationMenu.Item>
+                </NavigationMenu.Content>
+              </NavigationMenu.Item>
+              <NavigationMenu.Separator />
+              <NavigationMenu.Item value="careers">
+                <NavigationMenu.Link href="#careers">Careers</NavigationMenu.Link>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="services">
+            <NavigationMenu.Trigger href="#services">
               Services
               <DownArrow />
-            </Trigger>
-            <Content aria-label="Services">
-              <Item value="consulting">
-                <Link href="#consulting">Consulting</Link>
-              </Item>
-              <Item value="support">
-                <Link href="#support">Support</Link>
-              </Item>
-            </Content>
-          </Item>
-          <Item value="contact">
-            <Link href="#contact">Contact</Link>
-          </Item>
-        </List>
-      </Root>
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="Services">
+              <NavigationMenu.Item value="consulting">
+                <NavigationMenu.Link href="#consulting">Consulting</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="support">
+                <NavigationMenu.Link href="#support">Support</NavigationMenu.Link>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item value="contact">
+            <NavigationMenu.Link href="#contact">Contact</NavigationMenu.Link>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>
     </div>
   );
 }
@@ -599,168 +591,168 @@ export function Page() {
             <ExampleTabs
               label="Links only"
               preview={<LiveBasic />}
-              code={`<Root aria-label="Main">
-  <List>
-    <Item value="home">
-      <Link href="/home">Home</Link>
-    </Item>
-    <Item value="about">
-      <Link href="/about">About</Link>
-    </Item>
-    <Item value="contact">
-      <Link href="/contact">Contact</Link>
-    </Item>
-  </List>
-</Root>`}
+              code={`<NavigationMenu.Root aria-label="Main">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="home">
+      <NavigationMenu.Link href="/home">Home</NavigationMenu.Link>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="about">
+      <NavigationMenu.Link href="/about">About</NavigationMenu.Link>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="contact">
+      <NavigationMenu.Link href="/contact">Contact</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>`}
               css={CSS_LINKS_ONLY}
             />
 
             <ExampleTabs
               label="Dropdown"
               preview={<LiveDropdown />}
-              code={`<Root aria-label="Main">
-  <List>
-    <Item value="home">
-      <Link href="/home">Home</Link>
-    </Item>
-    <Item value="products">
-      <Trigger>Products</Trigger>
-      <Content aria-label="Products">
-        <Item value="analytics">
-          <Link href="/analytics">Analytics</Link>
-        </Item>
-        <Item value="automation">
-          <Link href="/automation">Automation</Link>
-        </Item>
-      </Content>
-    </Item>
-    <Item value="pricing">
-      <Link href="/pricing">Pricing</Link>
-    </Item>
-  </List>
-</Root>`}
+              code={`<NavigationMenu.Root aria-label="Main">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="home">
+      <NavigationMenu.Link href="/home">Home</NavigationMenu.Link>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="products">
+      <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="Products">
+        <NavigationMenu.Item value="analytics">
+          <NavigationMenu.Link href="/analytics">Analytics</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="automation">
+          <NavigationMenu.Link href="/automation">Automation</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="pricing">
+      <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>`}
               css={CSS_DROPDOWN}
             />
 
             <ExampleTabs
               label="Nested"
               preview={<LiveNested />}
-              code={`<Root aria-label="Main">
-  <List>
-    <Item value="home">
-      <Link href="/home">Home</Link>
-    </Item>
-    <Item value="docs">
-      <Trigger>Docs</Trigger>
-      <Content aria-label="Docs">
-        <Item value="guide">
-          <Link href="/guide">Guide</Link>
-        </Item>
-        <Item value="api">
-          <Trigger>API</Trigger>
-          <Content aria-label="API">
-            <Item value="components">
-              <Link href="/components">Components</Link>
-            </Item>
-            <Item value="hooks">
-              <Link href="/hooks">Hooks</Link>
-            </Item>
-          </Content>
-        </Item>
-      </Content>
-    </Item>
-    <Item value="blog">
-      <Link href="/blog">Blog</Link>
-    </Item>
-  </List>
-</Root>`}
+              code={`<NavigationMenu.Root aria-label="Main">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="home">
+      <NavigationMenu.Link href="/home">Home</NavigationMenu.Link>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="docs">
+      <NavigationMenu.Trigger>Docs</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="Docs">
+        <NavigationMenu.Item value="guide">
+          <NavigationMenu.Link href="/guide">Guide</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="api">
+          <NavigationMenu.Trigger>API</NavigationMenu.Trigger>
+          <NavigationMenu.Content aria-label="API">
+            <NavigationMenu.Item value="components">
+              <NavigationMenu.Link href="/components">Components</NavigationMenu.Link>
+            </NavigationMenu.Item>
+            <NavigationMenu.Item value="hooks">
+              <NavigationMenu.Link href="/hooks">Hooks</NavigationMenu.Link>
+            </NavigationMenu.Item>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="blog">
+      <NavigationMenu.Link href="/blog">Blog</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>`}
               css={CSS_NESTED}
             />
 
             <ExampleTabs
               label="Separators"
               preview={<LiveSeparators />}
-              code={`<Root aria-label="Main">
-  <List>
-    <Item value="file">
-      <Trigger>File</Trigger>
-      <Content aria-label="File">
-        <Item value="new">
-          <Link href="/new">New</Link>
-        </Item>
-        <Item value="open">
-          <Link href="/open">Open</Link>
-        </Item>
-        <Separator />
-        <Item value="export">
-          <Link href="/export">Export</Link>
-        </Item>
-      </Content>
-    </Item>
-    <Item value="edit">
-      <Trigger>Edit</Trigger>
-      <Content aria-label="Edit">
-        <Item value="undo">
-          <Link href="/undo">Undo</Link>
-        </Item>
-        <Separator />
-        <Item value="cut">
-          <Link href="/cut">Cut</Link>
-        </Item>
-        <Item value="paste">
-          <Link href="/paste">Paste</Link>
-        </Item>
-      </Content>
-    </Item>
-  </List>
-</Root>`}
+              code={`<NavigationMenu.Root aria-label="Main">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="file">
+      <NavigationMenu.Trigger>File</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="File">
+        <NavigationMenu.Item value="new">
+          <NavigationMenu.Link href="/new">New</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="open">
+          <NavigationMenu.Link href="/open">Open</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Separator />
+        <NavigationMenu.Item value="export">
+          <NavigationMenu.Link href="/export">Export</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="edit">
+      <NavigationMenu.Trigger>Edit</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="Edit">
+        <NavigationMenu.Item value="undo">
+          <NavigationMenu.Link href="/undo">Undo</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Separator />
+        <NavigationMenu.Item value="cut">
+          <NavigationMenu.Link href="/cut">Cut</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="paste">
+          <NavigationMenu.Link href="/paste">Paste</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>`}
               css={CSS_SEPARATOR}
             />
 
             <ExampleTabs
               label="Full"
               preview={<LiveFull />}
-              code={`<Root aria-label="Main">
-  <List>
-    <Item value="home">
-      <Link href="/home">Home</Link>
-    </Item>
-    <Item value="about">
-      <Trigger>About</Trigger>
-      <Content aria-label="About">
-        <Item value="team">
-          <Trigger>Team</Trigger>
-          <Content aria-label="Team">
-            <Item value="eng">
-              <Link href="/eng">Engineering</Link>
-            </Item>
-            <Item value="design">
-              <Link href="/design">Design</Link>
-            </Item>
-          </Content>
-        </Item>
-        <Separator />
-        <Item value="careers">
-          <Link href="/careers">Careers</Link>
-        </Item>
-      </Content>
-    </Item>
-    <Item value="services">
-      <Trigger>Services</Trigger>
-      <Content aria-label="Services">
-        <Item value="consulting">
-          <Link href="/consulting">Consulting</Link>
-        </Item>
-        <Item value="support">
-          <Link href="/support">Support</Link>
-        </Item>
-      </Content>
-    </Item>
-    <Item value="contact">
-      <Link href="/contact">Contact</Link>
-    </Item>
-  </List>
-</Root>`}
+              code={`<NavigationMenu.Root aria-label="Main">
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="home">
+      <NavigationMenu.Link href="/home">Home</NavigationMenu.Link>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="about">
+      <NavigationMenu.Trigger>About</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="About">
+        <NavigationMenu.Item value="team">
+          <NavigationMenu.Trigger>Team</NavigationMenu.Trigger>
+          <NavigationMenu.Content aria-label="Team">
+            <NavigationMenu.Item value="eng">
+              <NavigationMenu.Link href="/eng">Engineering</NavigationMenu.Link>
+            </NavigationMenu.Item>
+            <NavigationMenu.Item value="design">
+              <NavigationMenu.Link href="/design">Design</NavigationMenu.Link>
+            </NavigationMenu.Item>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+        <NavigationMenu.Separator />
+        <NavigationMenu.Item value="careers">
+          <NavigationMenu.Link href="/careers">Careers</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="services">
+      <NavigationMenu.Trigger>Services</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="Services">
+        <NavigationMenu.Item value="consulting">
+          <NavigationMenu.Link href="/consulting">Consulting</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item value="support">
+          <NavigationMenu.Link href="/support">Support</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="contact">
+      <NavigationMenu.Link href="/contact">Contact</NavigationMenu.Link>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>`}
               css={CSS_FULL}
             />
 
