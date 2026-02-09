@@ -634,11 +634,11 @@ export function Page() {
 
             <a
               className="bundle-badge"
-              href="https://bundlejs.com/?q=naavi@0.1.1"
+              href="https://bundlejs.com/?q=naavi@0.2.0"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span className="bundle-badge-size">8.95 kB</span>
+              <span className="bundle-badge-size">9 kB</span>
               <span className="bundle-badge-label">gzip</span>
             </a>
 
@@ -652,8 +652,8 @@ export function Page() {
             <h2># Why?</h2>
             <ul className="features">
               <li>
-                123 kB → 42.8 kB gzip — built on <code>@base-ui/react</code>,
-                not around it
+                9 kB gzip <code>naavi</code> vs 42.8 kB gzip{" "}
+                <code>@base-ui/react/navigation-menu</code>
               </li>
               <li>SEO safe rendering cycle</li>
               <li>Respects native behaviour</li>
