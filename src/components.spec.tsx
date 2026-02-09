@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, act } from "react";
 import { describe, test, expect, beforeEach } from "bun:test";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import { Root, List, Item, Trigger, Content, Link } from "./components.tsx";
 import * as NavigationMenu from "./components.tsx";
@@ -315,6 +315,83 @@ describe("cascading settings context", () => {
     // Now hover Edit — should open because armed
     await act(() => { fireEvent.mouseEnter(screen.getByText("Edit")); });
     expect(getPath()).toEqual(["edit"]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Single-item menu: Escape leaves tabindex=-1 stuck on trigger
+// ---------------------------------------------------------------------------
+
+function SingleItemMenu() {
+  const [path, setPath] = useState<string[]>([]);
+
+  return (
+    <div>
+      <span data-testid="path">{JSON.stringify(path)}</span>
+      <Root aria-label="Single" value={path} onValueChange={setPath}>
+        <List>
+          <Item value="only">
+            <Trigger>Only</Trigger>
+            <Content aria-label="Only">
+              <Item value="child">
+                <Link href="#child">Child</Link>
+              </Item>
+            </Content>
+          </Item>
+        </List>
+      </Root>
+    </div>
+  );
+}
+
+describe("single-item tabindex recovery after Escape", () => {
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  test("Escape from menubar trigger preserves tabindex=0", async () => {
+    render(<SingleItemMenu />);
+    const trigger = screen.getByText("Only");
+
+    // Initial: trigger should be tabindex="0" (set by Root useEffect)
+    expect(trigger.getAttribute("tabindex")).toBe("0");
+
+    // Open via Enter
+    await act(() => { fireEvent.keyDown(trigger, { key: "Enter" }); });
+    expect(getPath()).toEqual(["only"]);
+
+    // Wait for rAF focus into submenu
+    await act(() => new Promise((r) => requestAnimationFrame(r)));
+
+    // Submenu item got tabindex=0; trigger is now -1
+    expect(trigger.getAttribute("tabindex")).toBe("-1");
+
+    // Now press Escape on the trigger (simulating focus returning to menubar)
+    await act(() => { fireEvent.keyDown(trigger, { key: "Escape" }); });
+    expect(getPath()).toEqual([]);
+
+    // BUG: trigger should be tabindex="0" again so user can Tab back to it
+    expect(trigger.getAttribute("tabindex")).toBe("0");
+  });
+
+  test("Escape from submenu item restores trigger tabindex=0", async () => {
+    render(<SingleItemMenu />);
+    const trigger = screen.getByText("Only");
+
+    // Open
+    await act(() => { fireEvent.keyDown(trigger, { key: "Enter" }); });
+    await act(() => new Promise((r) => requestAnimationFrame(r)));
+
+    const childLink = screen.getByText("Child");
+    expect(childLink.getAttribute("tabindex")).toBe("0");
+    expect(trigger.getAttribute("tabindex")).toBe("-1");
+
+    // Escape from inside submenu
+    await act(() => { fireEvent.keyDown(childLink, { key: "Escape" }); });
+    expect(getPath()).toEqual([]);
+
+    // Trigger should be restored
+    expect(trigger.getAttribute("tabindex")).toBe("0");
   });
 });
 

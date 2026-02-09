@@ -324,8 +324,9 @@ export function useMenuKeyboard({
 
           case "Escape": {
             if (inMenubar) {
-              // In menubar, close all
+              // In menubar, close all and restore roving tabindex on current trigger
               closeAll(ctx);
+              focusItem(navEl, target);
             } else {
               // In submenu, close current submenu, focus parent trigger
               const parentTrigger = getParentTrigger(menu);
@@ -341,6 +342,16 @@ export function useMenuKeyboard({
           case "Tab": {
             // Close all menus, disarm, let default Tab behavior happen
             closeAll(ctx);
+            // Restore roving tabindex so the menubar trigger remains tabbable.
+            // Don't call focusItem (which also calls .focus()) — let Tab move
+            // focus naturally to the next/previous element.
+            const prev = navEl.querySelector<HTMLElement>(
+              `${MENUITEM_SELECTOR}[tabindex="0"]`,
+            );
+            if (prev && prev !== target) {
+              prev.setAttribute("tabindex", "-1");
+            }
+            target.setAttribute("tabindex", "0");
             // Don't preventDefault — let Tab move focus naturally
             break;
           }
