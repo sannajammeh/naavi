@@ -6,28 +6,28 @@ import { NavigationMenu } from "../src/index.ts";
 
 const INSTALL_CMD = "bun add naavi";
 
-const BASIC_EXAMPLE = `import { NavigationMenu } from "naavi"
+const BASIC_EXAMPLE = `import { Root, List, Item, Trigger, Content, Link } from "naavi"
 
 function Nav() {
   return (
-    <NavigationMenu.Root aria-label="Main">
-      <NavigationMenu.List>
-        <NavigationMenu.Item value="home">
-          <NavigationMenu.Link href="/">Home</NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item value="about">
-          <NavigationMenu.Trigger>About</NavigationMenu.Trigger>
-          <NavigationMenu.Content aria-label="About">
-            <NavigationMenu.Item value="team">
-              <NavigationMenu.Link href="/team">Team</NavigationMenu.Link>
-            </NavigationMenu.Item>
-            <NavigationMenu.Item value="blog">
-              <NavigationMenu.Link href="/blog">Blog</NavigationMenu.Link>
-            </NavigationMenu.Item>
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
-      </NavigationMenu.List>
-    </NavigationMenu.Root>
+    <Root aria-label="Main">
+      <List>
+        <Item value="home">
+          <Link href="/">Home</Link>
+        </Item>
+        <Item value="about">
+          <Trigger>About</Trigger>
+          <Content aria-label="About">
+            <Item value="team">
+              <Link href="/team">Team</Link>
+            </Item>
+            <Item value="blog">
+              <Link href="/blog">Blog</Link>
+            </Item>
+          </Content>
+        </Item>
+      </List>
+    </Root>
   )
 }`;
 
@@ -260,10 +260,14 @@ function LiveDropdown() {
             </NavigationMenu.Trigger>
             <NavigationMenu.Content aria-label="Products">
               <NavigationMenu.Item value="analytics">
-                <NavigationMenu.Link href="#analytics">Analytics</NavigationMenu.Link>
+                <NavigationMenu.Link href="#analytics">
+                  Analytics
+                </NavigationMenu.Link>
               </NavigationMenu.Item>
               <NavigationMenu.Item value="automation">
-                <NavigationMenu.Link href="#automation">Automation</NavigationMenu.Link>
+                <NavigationMenu.Link href="#automation">
+                  Automation
+                </NavigationMenu.Link>
               </NavigationMenu.Item>
             </NavigationMenu.Content>
           </NavigationMenu.Item>
@@ -300,10 +304,14 @@ function LiveNested() {
                 </NavigationMenu.Trigger>
                 <NavigationMenu.Content aria-label="API">
                   <NavigationMenu.Item value="components">
-                    <NavigationMenu.Link href="#components">Components</NavigationMenu.Link>
+                    <NavigationMenu.Link href="#components">
+                      Components
+                    </NavigationMenu.Link>
                   </NavigationMenu.Item>
                   <NavigationMenu.Item value="hooks">
-                    <NavigationMenu.Link href="#hooks">Hooks</NavigationMenu.Link>
+                    <NavigationMenu.Link href="#hooks">
+                      Hooks
+                    </NavigationMenu.Link>
                   </NavigationMenu.Item>
                 </NavigationMenu.Content>
               </NavigationMenu.Item>
@@ -368,7 +376,7 @@ function LiveSeparators() {
 function LiveFull() {
   return (
     <div className="example-wrapper">
-      <NavigationMenu.Root aria-label="Full example">
+      <NavigationMenu.Root openOnHover={true} aria-label="Full example">
         <NavigationMenu.List>
           <NavigationMenu.Item value="home">
             <NavigationMenu.Link href="#home">Home</NavigationMenu.Link>
@@ -378,7 +386,7 @@ function LiveFull() {
               About
               <DownArrow />
             </NavigationMenu.Trigger>
-            <NavigationMenu.Content aria-label="About">
+            <NavigationMenu.Content openOnHover={false} aria-label="About">
               <NavigationMenu.Item value="team">
                 <NavigationMenu.Trigger href="#team">
                   Team
@@ -386,16 +394,22 @@ function LiveFull() {
                 </NavigationMenu.Trigger>
                 <NavigationMenu.Content aria-label="Team">
                   <NavigationMenu.Item value="eng">
-                    <NavigationMenu.Link href="#eng">Engineering</NavigationMenu.Link>
+                    <NavigationMenu.Link href="#eng">
+                      Engineering
+                    </NavigationMenu.Link>
                   </NavigationMenu.Item>
                   <NavigationMenu.Item value="design">
-                    <NavigationMenu.Link href="#design">Design</NavigationMenu.Link>
+                    <NavigationMenu.Link href="#design">
+                      Design
+                    </NavigationMenu.Link>
                   </NavigationMenu.Item>
                 </NavigationMenu.Content>
               </NavigationMenu.Item>
               <NavigationMenu.Separator />
               <NavigationMenu.Item value="careers">
-                <NavigationMenu.Link href="#careers">Careers</NavigationMenu.Link>
+                <NavigationMenu.Link href="#careers">
+                  Careers
+                </NavigationMenu.Link>
               </NavigationMenu.Item>
             </NavigationMenu.Content>
           </NavigationMenu.Item>
@@ -406,10 +420,14 @@ function LiveFull() {
             </NavigationMenu.Trigger>
             <NavigationMenu.Content aria-label="Services">
               <NavigationMenu.Item value="consulting">
-                <NavigationMenu.Link href="#consulting">Consulting</NavigationMenu.Link>
+                <NavigationMenu.Link href="#consulting">
+                  Consulting
+                </NavigationMenu.Link>
               </NavigationMenu.Item>
               <NavigationMenu.Item value="support">
-                <NavigationMenu.Link href="#support">Support</NavigationMenu.Link>
+                <NavigationMenu.Link href="#support">
+                  Support
+                </NavigationMenu.Link>
               </NavigationMenu.Item>
             </NavigationMenu.Content>
           </NavigationMenu.Item>
@@ -518,12 +536,23 @@ export function Page() {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>naavi</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body>
         <div className="page">
           <header>
-            <span className="logo">◆</span>
+            <svg
+              className="logo"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              viewBox="0 0 256 256"
+              aria-hidden="true"
+            >
+              <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z" />
+            </svg>
             <a
               className="header-link"
               href="https://github.com/sannajammeh/naavi"
@@ -572,8 +601,7 @@ export function Page() {
               <li>Hover arm/disarm state machine with configurable delay</li>
               <li>Nested submenus with depth-aware focus management</li>
               <li>
-                Polymorphic rendering via{" "}
-                <code>@base-ui/react</code> useRender
+                Polymorphic rendering via <code>@base-ui/react</code> useRender
               </li>
               <li>Zero runtime deps beyond React + @base-ui</li>
               <li>TypeScript strict mode, ESM-only</li>
@@ -768,49 +796,104 @@ export function Page() {
               </thead>
               <tbody>
                 <tr>
-                  <td><code>Root</code></td>
-                  <td><code>{"<nav>"}</code></td>
-                  <td>Top-level wrapper. Manages open state, keyboard, outside click, blur.</td>
+                  <td>
+                    <code>Root</code>
+                  </td>
+                  <td>
+                    <code>{"<nav>"}</code>
+                  </td>
+                  <td>
+                    Top-level wrapper. Manages open state, keyboard, outside
+                    click, blur.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>List</code></td>
-                  <td><code>{"<ul>"}</code></td>
-                  <td>Menubar container with <code>role="menubar"</code>.</td>
+                  <td>
+                    <code>List</code>
+                  </td>
+                  <td>
+                    <code>{"<ul>"}</code>
+                  </td>
+                  <td>
+                    Menubar container with <code>role="menubar"</code>.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>Item</code></td>
-                  <td><code>{"<li>"}</code></td>
-                  <td>Menu item wrapper. Provides context with unique <code>value</code>.</td>
+                  <td>
+                    <code>Item</code>
+                  </td>
+                  <td>
+                    <code>{"<li>"}</code>
+                  </td>
+                  <td>
+                    Menu item wrapper. Provides context with unique{" "}
+                    <code>value</code>.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>Trigger</code></td>
-                  <td><code>{"<a>"}</code></td>
-                  <td>Opens/closes submenu. Has <code>aria-haspopup</code> + <code>aria-expanded</code>.</td>
+                  <td>
+                    <code>Trigger</code>
+                  </td>
+                  <td>
+                    <code>{"<a>"}</code>
+                  </td>
+                  <td>
+                    Opens/closes submenu. Has <code>aria-haspopup</code> +{" "}
+                    <code>aria-expanded</code>.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>Content</code></td>
-                  <td><code>{"<ul>"}</code></td>
-                  <td>Submenu panel with <code>role="menu"</code>. Portals into Viewport if present.</td>
+                  <td>
+                    <code>Content</code>
+                  </td>
+                  <td>
+                    <code>{"<ul>"}</code>
+                  </td>
+                  <td>
+                    Submenu panel with <code>role="menu"</code>. Portals into
+                    Viewport if present.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>Link</code></td>
-                  <td><code>{"<a>"}</code></td>
-                  <td>Leaf navigation link with <code>role="menuitem"</code>.</td>
+                  <td>
+                    <code>Link</code>
+                  </td>
+                  <td>
+                    <code>{"<a>"}</code>
+                  </td>
+                  <td>
+                    Leaf navigation link with <code>role="menuitem"</code>.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>Separator</code></td>
-                  <td><code>{"<li>"}</code></td>
-                  <td>Visual divider with <code>role="separator"</code>.</td>
+                  <td>
+                    <code>Separator</code>
+                  </td>
+                  <td>
+                    <code>{"<li>"}</code>
+                  </td>
+                  <td>
+                    Visual divider with <code>role="separator"</code>.
+                  </td>
                 </tr>
                 <tr>
-                  <td><code>Viewport</code></td>
-                  <td><code>{"<div>"}</code></td>
+                  <td>
+                    <code>Viewport</code>
+                  </td>
+                  <td>
+                    <code>{"<div>"}</code>
+                  </td>
                   <td>Optional container for Content portaling.</td>
                 </tr>
                 <tr>
-                  <td><code>Portal</code></td>
+                  <td>
+                    <code>Portal</code>
+                  </td>
                   <td>—</td>
-                  <td>createPortal wrapper. Target via <code>selector</code> prop or auto-created div.</td>
+                  <td>
+                    createPortal wrapper. Target via <code>selector</code> prop
+                    or auto-created div.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -818,9 +901,9 @@ export function Page() {
             {/* Nested submenus */}
             <h2># Nested Submenus</h2>
             <p className="section-desc">
-              Nest <code>Item → Trigger → Content</code> at any depth.
-              Keyboard navigation is depth-aware — left/right moves between
-              depths, up/down moves within.
+              Nest <code>Item → Trigger → Content</code> at any depth. Keyboard
+              navigation is depth-aware — left/right moves between depths,
+              up/down moves within.
             </p>
             <Code lang="tsx">{NESTED_EXAMPLE}</Code>
 
@@ -980,44 +1063,64 @@ export function Page() {
               </thead>
               <tbody>
                 <tr>
-                  <td><kbd>→</kbd></td>
+                  <td>
+                    <kbd>→</kbd>
+                  </td>
                   <td>Next item</td>
                   <td>Open submenu / next menubar item</td>
                 </tr>
                 <tr>
-                  <td><kbd>←</kbd></td>
+                  <td>
+                    <kbd>←</kbd>
+                  </td>
                   <td>Previous item</td>
                   <td>Close to parent / previous menubar item</td>
                 </tr>
                 <tr>
-                  <td><kbd>↓</kbd></td>
+                  <td>
+                    <kbd>↓</kbd>
+                  </td>
                   <td>Open submenu (first item)</td>
                   <td>Next item</td>
                 </tr>
                 <tr>
-                  <td><kbd>↑</kbd></td>
+                  <td>
+                    <kbd>↑</kbd>
+                  </td>
                   <td>Open submenu (last item)</td>
                   <td>Previous item</td>
                 </tr>
                 <tr>
-                  <td><kbd>Enter</kbd> / <kbd>Space</kbd></td>
+                  <td>
+                    <kbd>Enter</kbd> / <kbd>Space</kbd>
+                  </td>
                   <td colSpan={2}>Activate link or toggle submenu</td>
                 </tr>
                 <tr>
-                  <td><kbd>Escape</kbd></td>
+                  <td>
+                    <kbd>Escape</kbd>
+                  </td>
                   <td colSpan={2}>Close current menu, focus parent trigger</td>
                 </tr>
                 <tr>
-                  <td><kbd>Home</kbd></td>
+                  <td>
+                    <kbd>Home</kbd>
+                  </td>
                   <td colSpan={2}>First item in current menu</td>
                 </tr>
                 <tr>
-                  <td><kbd>End</kbd></td>
+                  <td>
+                    <kbd>End</kbd>
+                  </td>
                   <td colSpan={2}>Last item in current menu</td>
                 </tr>
                 <tr>
-                  <td><kbd>A–Z</kbd></td>
-                  <td colSpan={2}>Focus next item starting with that character</td>
+                  <td>
+                    <kbd>A–Z</kbd>
+                  </td>
+                  <td colSpan={2}>
+                    Focus next item starting with that character
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -1025,7 +1128,8 @@ export function Page() {
             {/* Data attributes */}
             <h2># Data Attributes</h2>
             <p className="section-desc">
-              Style with data attributes — no className conflicts, no CSS-in-JS required.
+              Style with data attributes — no className conflicts, no CSS-in-JS
+              required.
             </p>
             <Code>{`/* Target open/closed state */
 [data-navi-content][data-state="open"] { display: block; }
@@ -1040,14 +1144,24 @@ export function Page() {
             {/* Peer deps */}
             <h2># Peer Dependencies</h2>
             <ul className="features">
-              <li><code>react</code> ^18 || ^19</li>
-              <li><code>react-dom</code> ^18 || ^19</li>
-              <li><code>@base-ui/react</code> ^1.1.0</li>
-              <li><code>typescript</code> ^5</li>
+              <li>
+                <code>react</code> ^18 || ^19
+              </li>
+              <li>
+                <code>react-dom</code> ^18 || ^19
+              </li>
+              <li>
+                <code>@base-ui/react</code> ^1.1.0
+              </li>
+              <li>
+                <code>typescript</code> ^5
+              </li>
             </ul>
           </main>
 
-          <footer><a href="https://skala.sh">Skala</a> © 2026</footer>
+          <footer>
+            <a href="https://skala.sh">Skala</a> © 2026
+          </footer>
         </div>
       </body>
     </html>

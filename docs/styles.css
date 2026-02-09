@@ -52,7 +52,9 @@ header {
 }
 
 .logo {
-  font-size: 1.25rem;
+  width: 20px;
+  height: 20px;
+  color: var(--text);
 }
 
 .header-link {
