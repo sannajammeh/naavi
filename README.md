@@ -1,5 +1,7 @@
 # naavi
 
+[![bundlejs](https://deno.bundlejs.com/badge?q=naavi@0.1.1)](https://bundlejs.com/?q=naavi@0.1.1)
+
 WAI-ARIA compliant navigation menu components for React. Full keyboard navigation, hover state machine, nested submenus, and polymorphic rendering.
 
 ## Install

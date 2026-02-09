@@ -547,6 +547,16 @@ export function Page() {
               navigation, hover state machine, nested submenus.
             </p>
 
+            <a
+              className="bundle-badge"
+              href="https://bundlejs.com/?q=naavi@0.1.1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="bundle-badge-size">8.95 kB</span>
+              <span className="bundle-badge-label">gzip</span>
+            </a>
+
             {/* Install */}
             <Terminal>{INSTALL_CMD}</Terminal>
 
