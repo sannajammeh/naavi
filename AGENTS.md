@@ -1,4 +1,4 @@
-# AGENTS.md — navigation-menu
+# AGENTS.md — navi
 
 > Instructions for AI coding agents operating in this repository.
 
@@ -58,7 +58,7 @@ Node-ecosystem equivalent.**
 |-----------------------|------------------|-----------------------------|
 | Source modules        | `kebab-case.ts`  | `menu-item.ts`              |
 | Type definition files | `types.ts`       | `src/types.ts`              |
-| React components      | `PascalCase.tsx` | `NavigationMenu.tsx`        |
+| React components      | `PascalCase.tsx` | `Navi.tsx`                  |
 | React hooks           | `camelCase.ts`   | `useNavigation.ts`          |
 | Unit tests (co-loc)   | `*.spec.ts`      | `src/menu-item.spec.ts`     |
 | Integration tests     | `*.test.ts`      | `tests/navigation.test.ts`  |

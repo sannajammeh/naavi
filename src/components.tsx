@@ -1,3 +1,4 @@
+"use client";
 import {
   useState,
   useRef,
@@ -10,7 +11,14 @@ import { createPortal } from "react-dom";
 import { useRender } from "@base-ui/react/use-render";
 import { mergeProps } from "@base-ui/react/merge-props";
 
-import { RootContext, DepthContext, ItemContext, useRoot, useDepth, useItem } from "./context.ts";
+import {
+  RootContext,
+  DepthContext,
+  ItemContext,
+  useRoot,
+  useDepth,
+  useItem,
+} from "./context.ts";
 import { useMenuKeyboard } from "./keyboard.ts";
 import {
   Ids,
@@ -81,7 +89,8 @@ export function Root({
   );
 
   // Effective armed state: openOnHover overrides the state machine
-  const effectiveArmed = openOnHover === true ? true : openOnHover === false ? false : armed;
+  const effectiveArmed =
+    openOnHover === true ? true : openOnHover === false ? false : armed;
 
   const ctx: RootContextValue = useMemo(
     () => ({
@@ -98,7 +107,17 @@ export function Root({
       viewport,
       setViewport,
     }),
-    [openPath, setOpenPath, openOnHover, effectiveArmed, setArmed, hideDelay, closeOnClick, hideOnBlur, viewport],
+    [
+      openPath,
+      setOpenPath,
+      openOnHover,
+      effectiveArmed,
+      setArmed,
+      hideDelay,
+      closeOnClick,
+      hideOnBlur,
+      viewport,
+    ],
   );
 
   const onKeyDown = useMenuKeyboard({ ctx });
@@ -154,11 +173,7 @@ export function Root({
 
   return (
     <RootContext.Provider value={ctx}>
-      <nav
-        ref={navRef}
-        onKeyDown={onKeyDown}
-        {...navProps}
-      >
+      <nav ref={navRef} onKeyDown={onKeyDown} {...navProps}>
         {children}
       </nav>
     </RootContext.Provider>
@@ -173,15 +188,18 @@ export function List({ children, render, ...otherProps }: ListProps) {
   const element = useRender({
     render,
     defaultTagName: "ul",
-    props: mergeProps<"ul">(
-      { role: "menubar" },
-      otherProps,
-    ),
+    props: mergeProps<"ul">({ role: "menubar" }, otherProps),
   });
 
   return (
     <DepthContext.Provider value={{ depth: 0, parentValue: null }}>
-      {render ? element : <ul role="menubar" {...otherProps}>{children}</ul>}
+      {render ? (
+        element
+      ) : (
+        <ul role="menubar" {...otherProps}>
+          {children}
+        </ul>
+      )}
     </DepthContext.Provider>
   );
 }
@@ -190,15 +208,17 @@ export function List({ children, render, ...otherProps }: ListProps) {
 // 5.3 — Item
 // ---------------------------------------------------------------------------
 
-export function Item({ children, value: valueProp, render, ...otherProps }: ItemProps) {
+export function Item({
+  children,
+  value: valueProp,
+  render,
+  ...otherProps
+}: ItemProps) {
   const generatedId = useId();
   const value = valueProp ?? generatedId;
   const { depth } = useDepth();
 
-  const itemCtx = useMemo(
-    () => ({ value, depth }),
-    [value, depth],
-  );
+  const itemCtx = useMemo(() => ({ value, depth }), [value, depth]);
 
   const element = useRender({
     render,
@@ -208,7 +228,13 @@ export function Item({ children, value: valueProp, render, ...otherProps }: Item
 
   return (
     <ItemContext.Provider value={itemCtx}>
-      {render ? element : <li role="none" {...otherProps}>{children}</li>}
+      {render ? (
+        element
+      ) : (
+        <li role="none" {...otherProps}>
+          {children}
+        </li>
+      )}
     </ItemContext.Provider>
   );
 }
@@ -300,7 +326,12 @@ export function Trigger({ children, render, ...otherProps }: TriggerProps) {
 // 5.5 — Content
 // ---------------------------------------------------------------------------
 
-export function Content({ children, render, "aria-label": ariaLabel, ...otherProps }: ContentProps) {
+export function Content({
+  children,
+  render,
+  "aria-label": ariaLabel,
+  ...otherProps
+}: ContentProps) {
   const ctx = useRoot();
   const { value } = useItem();
   const { depth } = useDepth();
@@ -371,7 +402,12 @@ export function Content({ children, render, "aria-label": ariaLabel, ...otherPro
 // 5.6 — Link
 // ---------------------------------------------------------------------------
 
-export function Link({ children, render, closeOnClick: linkCloseOnClick, ...otherProps }: LinkProps) {
+export function Link({
+  children,
+  render,
+  closeOnClick: linkCloseOnClick,
+  ...otherProps
+}: LinkProps) {
   const ctx = useRoot();
   const { depth } = useDepth();
 

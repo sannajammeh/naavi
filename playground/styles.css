@@ -105,7 +105,7 @@ nav {
 }
 
 /* Submenus (Content) */
-[data-navigation-menu-content] {
+[data-navi-content] {
   list-style: none;
   margin: 0;
   padding: 0.25rem 0;
@@ -117,11 +117,11 @@ nav {
 }
 
 /* Visibility: closed submenus are hidden */
-[data-navigation-menu-content][data-state="closed"] {
+[data-navi-content][data-state="closed"] {
   display: none;
 }
 
-[data-navigation-menu-content][data-state="open"] {
+[data-navi-content][data-state="open"] {
   display: block;
 }
 
@@ -130,32 +130,32 @@ nav {
   position: relative;
 }
 
-[role="menubar"] > [role="none"] > [data-navigation-menu-content] {
+[role="menubar"] > [role="none"] > [data-navi-content] {
   position: absolute;
   top: 100%;
   left: 0;
 }
 
 /* Nested submenus: position to the right */
-[data-navigation-menu-content] [role="none"] {
+[data-navi-content] [role="none"] {
   position: relative;
 }
 
-[data-navigation-menu-content] [data-navigation-menu-content] {
+[data-navi-content] [data-navi-content] {
   position: absolute;
   top: 0;
   left: 100%;
 }
 
 /* Submenu menuitems (dark text on white bg) */
-[data-navigation-menu-content] [role="menuitem"] {
+[data-navi-content] [role="menuitem"] {
   color: #222;
   padding: 0.4rem 1rem;
   width: 100%;
 }
 
-[data-navigation-menu-content] [role="menuitem"]:hover,
-[data-navigation-menu-content] [role="menuitem"]:focus {
+[data-navi-content] [role="menuitem"]:hover,
+[data-navi-content] [role="menuitem"]:focus {
   background: #e8f0fe;
   color: #036;
   outline: 2px solid #036;
@@ -171,16 +171,16 @@ nav {
 }
 
 /* Viewport */
-[data-navigation-menu-viewport] {
+[data-navi-viewport] {
   position: relative;
 }
 
-[data-navigation-menu-viewport][data-state="closed"] {
+[data-navi-viewport][data-state="closed"] {
   display: none;
 }
 
 /* Trigger arrows in submenus */
-[data-navigation-menu-content] .arrow {
+[data-navi-content] .arrow {
   fill: #666;
   margin-left: auto;
 }

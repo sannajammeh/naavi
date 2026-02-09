@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Portal moves children to target
-Portal SHALL render its children into a target DOM element using `createPortal`. If a `selector` prop is provided, Portal SHALL use the matching DOM element. If no selector is provided, Portal SHALL create a `<div data-navigation-menu-portal>` appended to `document.body`.
+Portal SHALL render its children into a target DOM element using `createPortal`. If a `selector` prop is provided, Portal SHALL use the matching DOM element. If no selector is provided, Portal SHALL create a `<div data-navi-portal>` appended to `document.body`.
 
 #### Scenario: Portal with selector
 - **WHEN** `<Portal selector="#my-container">` is used
@@ -9,14 +9,14 @@ Portal SHALL render its children into a target DOM element using `createPortal`.
 
 #### Scenario: Portal without selector
 - **WHEN** `<Portal>` is used without a selector
-- **THEN** a `<div data-navigation-menu-portal>` SHALL be created in `document.body` and children SHALL be rendered inside it
+- **THEN** a `<div data-navi-portal>` SHALL be created in `document.body` and children SHALL be rendered inside it
 
 #### Scenario: Portal cleanup
 - **WHEN** Portal unmounts and it created its own container (no selector)
-- **THEN** the created `<div data-navigation-menu-portal>` SHALL be removed from `document.body`
+- **THEN** the created `<div data-navi-portal>` SHALL be removed from `document.body`
 
 ### Requirement: Viewport as optional Content target
-Viewport SHALL render a `<div data-navigation-menu-viewport>` element. When Viewport is present in the component tree, Content components SHALL portal their `<ul role="menu">` into the Viewport element instead of rendering in-place.
+Viewport SHALL render a `<div data-navi-viewport>` element. When Viewport is present in the component tree, Content components SHALL portal their `<ul role="menu">` into the Viewport element instead of rendering in-place.
 
 #### Scenario: Content renders in Viewport
 - **WHEN** Viewport is rendered and a Content is open

@@ -25,7 +25,7 @@ export function useRoot(): RootContextValue {
   const ctx = useContext(RootContext);
   if (ctx === null) {
     throw new Error(
-      "NavigationMenu: useRoot() must be used within a <Root> component.",
+      "Navi: useRoot() must be used within a <Root> component.",
     );
   }
   return ctx;
@@ -39,7 +39,7 @@ export function useItem(): ItemContextValue {
   const ctx = useContext(ItemContext);
   if (ctx === null) {
     throw new Error(
-      "NavigationMenu: useItem() must be used within an <Item> component.",
+      "Navi: useItem() must be used within an <Item> component.",
     );
   }
   return ctx;

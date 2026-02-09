@@ -1,0 +1,397 @@
+/* ==========================================================================
+   Docs — bunchee-it inspired warm monospace aesthetic
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f5efe6;
+  --bg-code: #ece5d8;
+  --border: #d4cbbe;
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --text-dim: #888;
+  --link: #1a1a1a;
+  --mono: "SF Mono", "Cascadia Code", "Fira Mono", "DejaVu Sans Mono",
+    Menlo, monospace;
+  --page-width: 720px;
+}
+
+html {
+  font-size: 15px;
+}
+
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 1.25rem;
+}
+
+.header-link {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+  font-size: 0.85rem;
+}
+
+.header-link:hover {
+  text-decoration-color: var(--text);
+}
+
+/* Main */
+main {
+  padding: 2.5rem 0;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+}
+
+/* Section headings — markdown style */
+h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.section-desc {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.section-desc code {
+  background: var(--bg-code);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Terminal prompt */
+.terminal {
+  font-size: 0.85rem;
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+.terminal-prompt {
+  color: var(--text-dim);
+}
+
+/* Code blocks */
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  margin: 1rem 0 1.5rem;
+}
+
+.code-block code {
+  font-family: var(--mono);
+}
+
+/* Feature list */
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1rem;
+}
+
+.features li {
+  font-size: 0.85rem;
+  padding: 0.2rem 0;
+  color: var(--text-muted);
+}
+
+.features li::before {
+  content: "- ";
+  color: var(--text-dim);
+}
+
+.features li code {
+  background: var(--bg-code);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: var(--text);
+}
+
+.features a {
+  color: var(--text);
+  text-underline-offset: 2px;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 0.75rem 0 1.5rem;
+}
+
+thead {
+  text-align: left;
+}
+
+th {
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+td code {
+  background: var(--bg-code);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Components table */
+.components-table td:first-child,
+.components-table td:nth-child(2) {
+  white-space: nowrap;
+}
+
+/* API table */
+.api-table .prop-name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.api-table .prop-type {
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-size: 0.75rem;
+}
+
+.api-table .prop-default {
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* Keyboard table */
+.keyboard-table td:first-child {
+  white-space: nowrap;
+}
+
+kbd {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.1em 0.4em;
+  font-family: var(--mono);
+  font-size: 0.85em;
+}
+
+/* Inline code in text */
+p code,
+li code,
+td code {
+  font-family: var(--mono);
+}
+
+/* Links */
+a {
+  color: var(--link);
+}
+
+/* ==========================================================================
+   Live Examples — navi components rendered with matching warm aesthetic
+   ========================================================================== */
+
+.example-wrapper {
+  margin: 1.5rem 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.example-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  padding: 0.4rem 0.75rem;
+  background: var(--bg-code);
+  border-bottom: 1px solid var(--border);
+  border-radius: 4px 4px 0 0;
+}
+
+/* Nav root inside examples */
+.example-wrapper nav {
+  background: #2c2420;
+  position: relative;
+}
+
+/* Menubar */
+.example-wrapper [role="menubar"] {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* All menuitems in examples */
+.example-wrapper [role="menuitem"] {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.5rem 0.85rem;
+  color: #f5efe6;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-family: var(--mono);
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.example-wrapper [role="menuitem"]:hover,
+.example-wrapper [role="menuitem"]:focus {
+  background: rgba(245, 239, 230, 0.12);
+}
+
+/* Arrow icons */
+.navi-arrow {
+  fill: currentColor;
+  opacity: 0.6;
+}
+
+/* Submenu content */
+.example-wrapper [data-navi-content] {
+  list-style: none;
+  margin: 0;
+  padding: 0.2rem 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  min-width: 180px;
+  z-index: 100;
+}
+
+/* Submenus hidden by default (SSR renders closed state) */
+.example-wrapper [data-navi-content][data-state="closed"] {
+  display: none;
+}
+
+.example-wrapper [data-navi-content][data-state="open"] {
+  display: block;
+}
+
+/* First-level submenus: below menubar */
+.example-wrapper [role="menubar"] > [role="none"] {
+  position: relative;
+}
+
+.example-wrapper [role="menubar"] > [role="none"] > [data-navi-content] {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+/* Nested submenus: to the right */
+.example-wrapper [data-navi-content] [role="none"] {
+  position: relative;
+}
+
+.example-wrapper [data-navi-content] [data-navi-content] {
+  position: absolute;
+  top: 0;
+  left: 100%;
+}
+
+/* Submenu menuitems */
+.example-wrapper [data-navi-content] [role="menuitem"] {
+  color: #2c2420;
+  padding: 0.35rem 0.85rem;
+  width: 100%;
+}
+
+.example-wrapper [data-navi-content] [role="menuitem"]:hover,
+.example-wrapper [data-navi-content] [role="menuitem"]:focus {
+  background: #ece5d8;
+  color: #2c2420;
+}
+
+/* Separator */
+.example-wrapper [role="separator"] {
+  height: 1px;
+  background: var(--border);
+  margin: 0.2rem 0;
+  list-style: none;
+}
+
+/* Submenu arrows */
+.example-wrapper [data-navi-content] .navi-arrow {
+  fill: #888;
+  margin-left: auto;
+}
+
+/* Footer */
+footer {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 3rem;
+}

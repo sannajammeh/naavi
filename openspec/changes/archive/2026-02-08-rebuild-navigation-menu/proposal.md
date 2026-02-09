@@ -1,6 +1,6 @@
 ## Why
 
-The current NavigationMenu implementation in `original.tsx` is brittle, bug-riddled, and relies heavily on direct DOM manipulation rather than React state. It uses external dependencies (`@mantine/hooks`), has incorrect ARIA semantics (buttons instead of links for triggers, divs instead of ul for menus), and its nested `Sub` component pattern creates duplicated context providers. The implementation needs to be rebuilt from scratch as a headless, unstyled primitive that is 1:1 compliant with the WAI-ARIA Menubar Navigation pattern.
+The current Navi implementation in `original.tsx` is brittle, bug-riddled, and relies heavily on direct DOM manipulation rather than React state. It uses external dependencies (`@mantine/hooks`), has incorrect ARIA semantics (buttons instead of links for triggers, divs instead of ul for menus), and its nested `Sub` component pattern creates duplicated context providers. The implementation needs to be rebuilt from scratch as a headless, unstyled primitive that is 1:1 compliant with the WAI-ARIA Menubar Navigation pattern.
 
 ## What Changes
 

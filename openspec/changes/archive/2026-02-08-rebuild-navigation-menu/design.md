@@ -4,7 +4,7 @@ The current `original.tsx` implementation has structural problems: wrong ARIA se
 
 Constraints carried from exploration:
 - Elements SHALL NOT be removed from the DOM (SEO requirement)
-- Same data attributes as original (`data-navigation-menu-trigger`, `data-navigation-menu-content`, etc.)
+- Same data attributes as original (`data-navi-trigger`, `data-navi-content`, etc.)
 - Consumer CSS controls visibility via `data-state="open|closed"`
 - Peer dependency on `@base-ui/react` for `useRender` / `mergeProps`
 - Zero other runtime dependencies beyond React
@@ -44,7 +44,7 @@ Constraints carried from exploration:
 
 **Decision**: Remove `Sub` entirely. `Item` + `Trigger` + `Content` works recursively at any depth.
 
-`Sub` in the original creates a new `NavigationMenuContext.Provider` with independent state. With the array path model, depth is tracked via `DepthContext` that increments at each `Content` boundary. No need for a separate component.
+`Sub` in the original creates a new `NaviContext.Provider` with independent state. With the array path model, depth is tracked via `DepthContext` that increments at each `Content` boundary. No need for a separate component.
 
 **Alternatives considered**:
 - Keep `Sub` as alias for `Item` — Adds API surface without value.

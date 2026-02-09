@@ -1,8 +1,30 @@
 {
-  "name": "@skala-org/navigation-menu",
+  "name": "navi",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "description": "WAI-ARIA compliant navigation menu components for React. Full keyboard navigation, hover state machine, nested submenus, and polymorphic rendering.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skala-org/navi"
+  },
+  "homepage": "https://github.com/skala-org/navi#readme",
+  "bugs": {
+    "url": "https://github.com/skala-org/navi/issues"
+  },
+  "keywords": [
+    "react",
+    "navigation",
+    "menu",
+    "menubar",
+    "wai-aria",
+    "accessible",
+    "a11y",
+    "keyboard-navigation",
+    "dropdown",
+    "submenu"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
   "devDependencies": {
     "@base-ui/react": "^1.1.0",
     "@happy-dom/global-registrator": "^20.5.2",
@@ -11,6 +33,7 @@
     "@types/bun": "latest",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
+    "bunchee": "^6.9.4",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
@@ -22,7 +45,7 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     }
   },
@@ -30,12 +53,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun run scripts/build.ts",
+    "build": "bunchee",
     "dev": "frunk [dev:*]",
     "dev:library": "bun --hot playground/server.ts",
+    "dev:docs": "bun --hot docs/server.tsx",
     "dev:reference": "PORT=3001  bun run wai-aria-spec/index.html",
-    "typecheck": "bunx tsc --noEmit"
+    "build:docs": "bun docs/build.tsx",
+    "typecheck": "bunx tsc --noEmit",
+    "prepublishOnly": "bun run build"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "./dist/index.d.ts"
 }
