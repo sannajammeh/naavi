@@ -76,7 +76,7 @@ const CSS_DROPDOWN = `/* Dropdown — menubar + one level of submenus */
   position: relative;
 }
 
-[data-navi-content] {
+[data-naavi-content] {
   position: absolute;
   top: 100%;
   left: 0;
@@ -86,15 +86,15 @@ const CSS_DROPDOWN = `/* Dropdown — menubar + one level of submenus */
   min-width: 160px;
 }
 
-[data-navi-content][data-state="closed"] { display: none; }
-[data-navi-content][data-state="open"]   { display: block; }`;
+[data-naavi-content][data-state="closed"] { display: none; }
+[data-naavi-content][data-state="open"]   { display: block; }`;
 
 const CSS_NESTED = `/* Nested — adds flyout submenus to the right */
-[data-navi-content] [role="none"] {
+[data-naavi-content] [role="none"] {
   position: relative;
 }
 
-[data-navi-content] [data-navi-content] {
+[data-naavi-content] [data-naavi-content] {
   top: 0;
   left: 100%;
 }`;
@@ -122,9 +122,9 @@ const CSS_FULL = `/* Full — all patterns combined (minimal) */
 }
 
 [role="menubar"] > [role="none"] { position: relative; }
-[data-navi-content] [role="none"] { position: relative; }
+[data-naavi-content] [role="none"] { position: relative; }
 
-[data-navi-content] {
+[data-naavi-content] {
   position: absolute;
   top: 100%;
   left: 0;
@@ -134,11 +134,11 @@ const CSS_FULL = `/* Full — all patterns combined (minimal) */
   min-width: 160px;
 }
 
-[data-navi-content][data-state="closed"] { display: none; }
-[data-navi-content][data-state="open"]   { display: block; }
+[data-naavi-content][data-state="closed"] { display: none; }
+[data-naavi-content][data-state="open"]   { display: block; }
 
 /* Nested: flyout right */
-[data-navi-content] [data-navi-content] {
+[data-naavi-content] [data-naavi-content] {
   top: 0;
   left: 100%;
 }
@@ -539,9 +539,21 @@ function InstallCmd() {
         type="button"
       >
         {copied ? (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" /></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            fill="currentColor"
+          >
+            <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
+          </svg>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z" /></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            fill="currentColor"
+          >
+            <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z" />
+          </svg>
         )}
       </button>
     </div>
@@ -640,8 +652,8 @@ export function Page() {
             <h2># Why?</h2>
             <ul className="features">
               <li>
-                123 kB → 42.8 kB gzip — built on{" "}
-                <code>@base-ui/react</code>, not around it
+                123 kB → 42.8 kB gzip — built on <code>@base-ui/react</code>,
+                not around it
               </li>
               <li>SEO safe rendering cycle</li>
               <li>Respects native behaviour</li>
@@ -1210,14 +1222,14 @@ export function Page() {
               required.
             </p>
             <Code>{`/* Target open/closed state */
-[data-navi-content][data-state="open"] { display: block; }
-[data-navi-content][data-state="closed"] { display: none; }
+[data-naavi-content][data-state="open"] { display: block; }
+[data-naavi-content][data-state="closed"] { display: none; }
 
 /* Target specific components */
-[data-navi-trigger] { }
-[data-navi-content] { }
-[data-navi-link] { }
-[data-navi-viewport] { }`}</Code>
+[data-naavi-trigger] { }
+[data-naavi-content] { }
+[data-naavi-link] { }
+[data-naavi-viewport] { }`}</Code>
 
             {/* Peer deps */}
             <h2># Peer Dependencies</h2>

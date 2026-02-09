@@ -135,7 +135,7 @@ Style with data attributes — no className conflicts, no CSS-in-JS required. He
 
 [role="menubar"] > [role="none"] { position: relative; }
 
-[data-navi-content] {
+[data-naavi-content] {
   position: absolute;
   top: 100%;
   left: 0;
@@ -145,12 +145,12 @@ Style with data attributes — no className conflicts, no CSS-in-JS required. He
   min-width: 160px;
 }
 
-[data-navi-content][data-state="closed"] { display: none; }
-[data-navi-content][data-state="open"]   { display: block; }
+[data-naavi-content][data-state="closed"] { display: none; }
+[data-naavi-content][data-state="open"]   { display: block; }
 
 /* Nested submenus: flyout right */
-[data-navi-content] [role="none"] { position: relative; }
-[data-navi-content] [data-navi-content] { top: 0; left: 100%; }
+[data-naavi-content] [role="none"] { position: relative; }
+[data-naavi-content] [data-naavi-content] { top: 0; left: 100%; }
 
 /* Separator */
 [role="separator"] {
@@ -164,10 +164,10 @@ Style with data attributes — no className conflicts, no CSS-in-JS required. He
 All available data attributes:
 
 ```css
-[data-navi-trigger] { }
-[data-navi-content] { }
-[data-navi-link] { }
-[data-navi-viewport] { }
+[data-naavi-trigger] { }
+[data-naavi-content] { }
+[data-naavi-link] { }
+[data-naavi-viewport] { }
 [data-state="open"] { }
 [data-state="closed"] { }
 ```

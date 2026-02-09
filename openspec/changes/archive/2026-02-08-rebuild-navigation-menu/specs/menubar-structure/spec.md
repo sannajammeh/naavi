@@ -22,18 +22,18 @@ Item SHALL render a `<li role="none">` element, removing the implied listitem se
 - **THEN** a `<li role="none">` element is in the DOM
 
 ### Requirement: Link renders menuitem anchor
-Link SHALL render an `<a role="menuitem">` element with `data-navi-link` attribute. Link SHALL accept an `href` prop.
+Link SHALL render an `<a role="menuitem">` element with `data-naavi-link` attribute. Link SHALL accept an `href` prop.
 
 #### Scenario: Simple link rendering
 - **WHEN** `<Link href="#home">Home</Link>` is rendered
-- **THEN** an `<a role="menuitem" href="#home" data-navi-link>Home</a>` element is in the DOM
+- **THEN** an `<a role="menuitem" href="#home" data-naavi-link>Home</a>` element is in the DOM
 
 ### Requirement: Trigger renders menuitem with haspopup
-Trigger SHALL render an element with `role="menuitem"`, `aria-haspopup="true"`, and `data-navi-trigger` attribute. Trigger SHALL render `aria-expanded` reflecting whether its associated Content is open. Trigger's default element SHALL be `<a>`.
+Trigger SHALL render an element with `role="menuitem"`, `aria-haspopup="true"`, and `data-naavi-trigger` attribute. Trigger SHALL render `aria-expanded` reflecting whether its associated Content is open. Trigger's default element SHALL be `<a>`.
 
 #### Scenario: Closed trigger rendering
 - **WHEN** `<Trigger href="#about">About</Trigger>` is rendered and its Content is closed
-- **THEN** an `<a role="menuitem" aria-haspopup="true" aria-expanded="false" data-navi-trigger>` element is in the DOM
+- **THEN** an `<a role="menuitem" aria-haspopup="true" aria-expanded="false" data-naavi-trigger>` element is in the DOM
 
 #### Scenario: Open trigger rendering
 - **WHEN** the Item's Content is open
@@ -44,11 +44,11 @@ Trigger SHALL render an element with `role="menuitem"`, `aria-haspopup="true"`, 
 - **THEN** a `<button>` element is rendered with the same ARIA attributes
 
 ### Requirement: Content renders menu list
-Content SHALL render a `<ul role="menu">` element with `data-navi-content`, `data-value`, and `data-state` attributes. Content SHALL have an `aria-label` prop.
+Content SHALL render a `<ul role="menu">` element with `data-naavi-content`, `data-value`, and `data-state` attributes. Content SHALL have an `aria-label` prop.
 
 #### Scenario: Closed content rendering
 - **WHEN** Content is rendered and its parent Item is not open
-- **THEN** `<ul role="menu" data-state="closed" data-navi-content>` is in the DOM
+- **THEN** `<ul role="menu" data-state="closed" data-naavi-content>` is in the DOM
 
 #### Scenario: Open content rendering
 - **WHEN** Content's parent Item is open

@@ -31,7 +31,7 @@ Initial release.
 - Polymorphic rendering via `@base-ui/react` (`render` prop)
 - Components: `Root`, `List`, `Item`, `Trigger`, `Content`, `Link`, `Separator`, `Viewport`, `Portal`
 - `NavigationMenu` namespace export for convenient dot-notation usage
-- Data attribute styling API (`data-navi-trigger`, `data-navi-content`, `data-state`)
+- Data attribute styling API (`data-naavi-trigger`, `data-naavi-content`, `data-state`)
 - Controlled & uncontrolled open state (`value` / `defaultValue` + `onValueChange`)
 
 ### Bug Fixes

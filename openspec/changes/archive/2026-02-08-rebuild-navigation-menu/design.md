@@ -4,7 +4,7 @@ The current `original.tsx` implementation has structural problems: wrong ARIA se
 
 Constraints carried from exploration:
 - Elements SHALL NOT be removed from the DOM (SEO requirement)
-- Same data attributes as original (`data-navi-trigger`, `data-navi-content`, etc.)
+- Same data attributes as original (`data-naavi-trigger`, `data-naavi-content`, etc.)
 - Consumer CSS controls visibility via `data-state="open|closed"`
 - Peer dependency on `@base-ui/react` for `useRender` / `mergeProps`
 - Zero other runtime dependencies beyond React

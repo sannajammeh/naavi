@@ -38,9 +38,9 @@
 - [x] 5.1 Implement `Root` — renders `<nav>`, provides `RootContext`, wires `onKeyDown` from `useMenuKeyboard`, manages `openPath` state (with controlled mode via `value`/`onValueChange`), manages `armed` state, manages `hideTimeout` ref
 - [x] 5.2 Implement `List` — renders `<ul role="menubar">`, provides `DepthContext` with `depth=0`
 - [x] 5.3 Implement `Item` — renders `<li role="none">`, provides `ItemContext` with value (auto-generated via `useId()` if not provided) and current depth
-- [x] 5.4 Implement `Trigger` — renders `<a>` by default via `useRender`, sets `role="menuitem"`, `aria-haspopup="true"`, `aria-expanded`, `aria-controls`, `data-navi-trigger`, `data-value`; handles click toggle, mouseenter/mouseleave for hover
-- [x] 5.5 Implement `Content` — renders `<ul role="menu">` via `useRender`, sets `data-state`, `data-navi-content`, `data-value`, `aria-label`, `aria-labelledby`; provides `DepthContext` with incremented depth; portals into Viewport if available; handles mouseenter/mouseleave for hover delay
-- [x] 5.6 Implement `Link` — renders `<a>` by default via `useRender`, sets `role="menuitem"`, `data-navi-link`; handles click to close menus (respects `closeOnClick`)
+- [x] 5.4 Implement `Trigger` — renders `<a>` by default via `useRender`, sets `role="menuitem"`, `aria-haspopup="true"`, `aria-expanded`, `aria-controls`, `data-naavi-trigger`, `data-value`; handles click toggle, mouseenter/mouseleave for hover
+- [x] 5.5 Implement `Content` — renders `<ul role="menu">` via `useRender`, sets `data-state`, `data-naavi-content`, `data-value`, `aria-label`, `aria-labelledby`; provides `DepthContext` with incremented depth; portals into Viewport if available; handles mouseenter/mouseleave for hover delay
+- [x] 5.6 Implement `Link` — renders `<a>` by default via `useRender`, sets `role="menuitem"`, `data-naavi-link`; handles click to close menus (respects `closeOnClick`)
 - [x] 5.7 Implement `Separator` — renders `<li role="separator">`
 
 ## Wave 5 — Hover & Interaction (5 tasks)
@@ -57,7 +57,7 @@
 
 > Viewport and Portal depend on RootContext. Barrel export depends on all components existing.
 
-- [x] 7.1 Implement `Viewport` — renders `<div data-navi-viewport>`, registers element via `RootContext.setViewport`, sets `data-state` based on any open content
+- [x] 7.1 Implement `Viewport` — renders `<div data-naavi-viewport>`, registers element via `RootContext.setViewport`, sets `data-state` based on any open content
 - [x] 7.2 Implement `Portal` — renders children via `createPortal` to selector target or auto-created body div, cleanup on unmount
 - [x] 8.1 Update `src/index.ts` — export all components (`Root`, `List`, `Item`, `Trigger`, `Content`, `Link`, `Separator`, `Viewport`, `Portal`) and all public types
 
@@ -66,7 +66,7 @@
 > Depends on everything above. Integration testing against the reference implementation.
 
 - [x] 9.1 Update `playground/App.tsx` — full Mythical University example matching the WAI-ARIA reference, using all components with nested submenus and separators
-- [x] 9.2 Add playground CSS — style targeting `data-navi-*` and `data-state` attributes to control visibility, positioning, and focus styling
+- [x] 9.2 Add playground CSS — style targeting `data-naavi-*` and `data-state` attributes to control visibility, positioning, and focus styling
 - [x] 9.3 Browser verify at `localhost:3000` — visual rendering matches `localhost:3001` reference
 - [x] 9.4 Keyboard verify — test all key mappings (arrows, Enter, Space, Escape, Home, End, character, Tab) against the reference implementation at `localhost:3001`
 - [x] 9.5 Run `bunx tsc --noEmit` — zero type errors
