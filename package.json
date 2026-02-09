@@ -1,6 +1,6 @@
 {
   "name": "naavi",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "WAI-ARIA compliant navigation menu components for React. Full keyboard navigation, hover state machine, nested submenus, and polymorphic rendering.",
   "license": "MIT",
   "private": false,
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@base-ui/react": "^1.1.0",
     "@happy-dom/global-registrator": "^20.5.2",
+    "@release-it/conventional-changelog": "^10.0.5",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/bun": "latest",
@@ -36,7 +37,8 @@
     "@types/react-dom": "^19.2.3",
     "bunchee": "^6.9.4",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "release-it": "^19.2.4"
   },
   "peerDependencies": {
     "@base-ui/react": "^1.1.0",
@@ -61,7 +63,37 @@
     "dev:reference": "PORT=3001  bun run wai-aria-spec/index.html",
     "build:docs": "bun docs/build.tsx",
     "typecheck": "bunx tsc --noEmit",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "release": "release-it"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "release: v${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "conventionalcommits",
+          "types": [
+            { "type": "feat", "section": "Features" },
+            { "type": "fix", "section": "Bug Fixes" },
+            { "type": "perf", "section": "Performance" },
+            { "type": "refactor", "section": "Refactors" },
+            { "type": "docs", "section": "Documentation" },
+            { "type": "chore", "hidden": true }
+          ]
+        },
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog"
+      }
+    }
   },
   "type": "module",
   "types": "./dist/index.d.ts"
