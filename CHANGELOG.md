@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/sannajammeh/naavi/compare/v0.1.1...v0.2.0) (2026-02-09)
+
+### Features
+
+* cascading settings context for per-depth openOnHover overrides ([f2239cd](https://github.com/sannajammeh/naavi/commit/f2239cd38267c3b8a4063812e9f1b6b4e8bef6a4))
+
+### Documentation
+
+* add compass SVG favicon and logo with light/dark support ([dc3059c](https://github.com/sannajammeh/naavi/commit/dc3059c14e00013f1c77618d01b0af92e2d50e72))
+* show all import styles in basic example ([c3680f9](https://github.com/sannajammeh/naavi/commit/c3680f967841c05d582494e26f53f1a1f1ae59d2))
+* simplify install cmd — inline pm select with copy icon ([0ded0ae](https://github.com/sannajammeh/naavi/commit/0ded0ae1faf338f8e3febd1abab1c9bba41dc838))
+* use NavigationMenu namespace import in all examples ([c1a2102](https://github.com/sannajammeh/naavi/commit/c1a21022d08d6cf4d3a944cdccd68b89abf7440d))
+
 ## 0.1.1 (2026-02-09)
 
 ### Bug Fixes
