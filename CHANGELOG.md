@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/sannajammeh/naavi/compare/v0.2.0...v0.2.1) (2026-02-09)
+
+### Bug Fixes
+
+* **attrs:** replace data-navi with data-naavi ([615bbbb](https://github.com/sannajammeh/naavi/commit/615bbbb3f8672073e2eb21a8655420efd677b437))
+* bundle size ([0a894cf](https://github.com/sannajammeh/naavi/commit/0a894cf18fad866a321b33c44a77b7b07731c54c))
+* kb ([f59c15b](https://github.com/sannajammeh/naavi/commit/f59c15b440b4f878d6052af57a3327db803a3a08))
+
 ## [0.2.0](https://github.com/sannajammeh/naavi/compare/v0.1.1...v0.2.0) (2026-02-09)
 
 ### Features
