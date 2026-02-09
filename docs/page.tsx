@@ -6,7 +6,12 @@ import { NavigationMenu } from "../src/index.ts";
 
 const INSTALL_CMD = "bun add naavi";
 
-const BASIC_EXAMPLE = `import { Root, List, Item, Trigger, Content, Link } from "naavi"
+const BASIC_EXAMPLE = `
+import { NavigationMenu } from "naavi"
+// or
+import { Root, List, Item, Trigger, Content, Link } from "naavi"
+// or
+import * as Naavi from "naavi"
 
 function Nav() {
   return (
@@ -29,7 +34,7 @@ function Nav() {
       </List>
     </Root>
   )
-}`;
+}`.trim();
 
 // ---------------------------------------------------------------------------
 // Minimal CSS snippets for each example pattern
