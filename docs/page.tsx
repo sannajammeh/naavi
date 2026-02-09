@@ -638,7 +638,7 @@ export function Page() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span className="bundle-badge-size">8.95 kB</span>
+              <span className="bundle-badge-size">9 kB</span>
               <span className="bundle-badge-label">gzip</span>
             </a>
 
