@@ -1,6 +1,6 @@
 {
   "name": "naavi",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "WAI-ARIA compliant navigation menu components for React. Full keyboard navigation, hover state machine, nested submenus, and polymorphic rendering.",
   "license": "MIT",
   "private": false,

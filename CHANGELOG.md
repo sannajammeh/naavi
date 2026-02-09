@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2](https://github.com/sannajammeh/naavi/compare/v0.2.1...v0.2.2) (2026-02-09)
+
+### Bug Fixes
+
+* **keyboard:** restore roving tabindex on Escape/Tab from menubar ([0f84d57](https://github.com/sannajammeh/naavi/commit/0f84d57c453e3bd08f2317bb303eb00ee357de27))
+
 ## [0.2.1](https://github.com/sannajammeh/naavi/compare/v0.2.0...v0.2.1) (2026-02-09)
 
 ### Bug Fixes
