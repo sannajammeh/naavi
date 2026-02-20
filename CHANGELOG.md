@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1](https://github.com/sannajammeh/naavi/compare/v0.2.2...v0.3.1) (2026-02-20)
+
+### Features
+
+* **component:** Add Close button ([98c32df](https://github.com/sannajammeh/naavi/commit/98c32df671c5d34c854c8ce6dda5c28b7d78d872))
+
 ## [0.2.2](https://github.com/sannajammeh/naavi/compare/v0.2.1...v0.2.2) (2026-02-09)
 
 ### Bug Fixes
