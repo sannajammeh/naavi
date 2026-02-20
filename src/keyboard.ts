@@ -16,7 +16,7 @@ import {
   focusPrevItem,
   focusByChar,
 } from "./focus.ts";
-import { LINK_ATTR, MENUITEM_SELECTOR } from "./constants.ts";
+import { LINK_ATTR, CLOSE_ATTR, MENUITEM_SELECTOR } from "./constants.ts";
 import type { RootContextValue } from "./types.ts";
 
 // ---------------------------------------------------------------------------
@@ -310,11 +310,12 @@ export function useMenuKeyboard({
                 });
               }
             } else {
-              // Leaf link — activate it
-              if (target.hasAttribute(LINK_ATTR) || target.tagName === "A") {
-                // Close all menus, let the link activate
-                closeAll(ctx);
-                // Click the link element
+              // Leaf menuitem — activate it
+              if (
+                target.hasAttribute(LINK_ATTR) ||
+                target.tagName === "A" ||
+                target.hasAttribute(CLOSE_ATTR)
+              ) {
                 target.click();
               }
             }

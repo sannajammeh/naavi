@@ -28,6 +28,7 @@ import {
   CONTENT_ATTR,
   VIEWPORT_ATTR,
   LINK_ATTR,
+  CLOSE_ATTR,
   PORTAL_ATTR,
   MENUITEM_SELECTOR,
 } from "./constants.ts";
@@ -39,6 +40,7 @@ import type {
   TriggerProps,
   ContentProps,
   LinkProps,
+  CloseProps,
   SeparatorProps,
   ViewportProps,
   PortalProps,
@@ -481,6 +483,56 @@ export function Link({
     render,
     defaultTagName: "a",
     props: mergeProps<"a">(defaultProps, otherProps),
+  });
+
+  return element;
+}
+
+// ---------------------------------------------------------------------------
+// 5.6b — Close
+// ---------------------------------------------------------------------------
+
+export function Close({
+  children,
+  render,
+  target = "root",
+  ...otherProps
+}: CloseProps) {
+  const ctx = useRoot();
+  const { depth } = useDepth();
+
+  const handleClick = useCallback(() => {
+    if (target === "root") {
+      // Capture trigger ref before clearing openPath
+      const triggerValue = ctx.openPath[0];
+      ctx.setOpenPath([]);
+      ctx.setArmed(false);
+      // Focus menubar trigger that opened the chain
+      if (triggerValue) {
+        const triggerEl = document.getElementById(Ids.trigger(triggerValue));
+        const navEl = ctx.navRef.current;
+        if (triggerEl && navEl) {
+          focusItem(navEl, triggerEl);
+        }
+      }
+    } else {
+      // target === "current": close only the containing menu
+      ctx.setOpenPath(ctx.openPath.slice(0, depth - 1));
+    }
+  }, [ctx, depth, target]);
+
+  const defaultProps: Record<string, unknown> = {
+    role: "menuitem",
+    tabIndex: -1,
+    [CLOSE_ATTR]: "",
+    onClick: handleClick,
+    children,
+  };
+
+  const element = useRender({
+    render,
+    defaultTagName: "button",
+    props: mergeProps<"button">(defaultProps, otherProps),
   });
 
   return element;

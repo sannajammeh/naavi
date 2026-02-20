@@ -14,6 +14,10 @@ export const VIEWPORT_SELECTOR = `[${VIEWPORT_ATTR}]`;
 export const LINK_ATTR = "data-naavi-link";
 export const LINK_SELECTOR = `[${LINK_ATTR}]`;
 
+/** Data attribute placed on close elements. */
+export const CLOSE_ATTR = "data-naavi-close";
+export const CLOSE_SELECTOR = `[${CLOSE_ATTR}]`;
+
 /** Data attribute placed on portal-created containers. */
 export const PORTAL_ATTR = "data-naavi-portal";
 

@@ -2,7 +2,7 @@ import { useState, act } from "react";
 import { describe, test, expect, beforeEach } from "bun:test";
 import { render, screen, fireEvent } from "@testing-library/react";
 
-import { Root, List, Item, Trigger, Content, Link } from "./components.tsx";
+import { Root, List, Item, Trigger, Content, Link, Close } from "./components.tsx";
 import * as NavigationMenu from "./components.tsx";
 import { NavigationMenu as NavigationMenuFromIndex } from "./index.ts";
 
@@ -404,6 +404,7 @@ describe("NavigationMenu namespace export", () => {
       "Trigger",
       "Content",
       "Link",
+      "Close",
       "Separator",
       "Viewport",
       "Portal",
@@ -427,5 +428,131 @@ describe("NavigationMenu namespace export", () => {
   test("index re-exports the same namespace object", () => {
     expect(NavigationMenuFromIndex.Root).toBe(Root);
     expect(NavigationMenuFromIndex).toBe(NavigationMenu);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Close component tests
+// ---------------------------------------------------------------------------
+
+/**
+ * Menu with Close buttons for testing close behavior.
+ * About > [Overview link, Close (root), Facts > [History link, Close (current)]]
+ */
+function CloseMenu() {
+  const [path, setPath] = useState<string[]>([]);
+
+  return (
+    <div>
+      <span data-testid="path">{JSON.stringify(path)}</span>
+      <Root aria-label="Close Menu" value={path} onValueChange={setPath}>
+        <List>
+          <Item value="about">
+            <Trigger>About</Trigger>
+            <Content aria-label="About">
+              <Item value="overview">
+                <Link href="#overview">Overview</Link>
+              </Item>
+              <Item value="close-root">
+                <Close>Dismiss All</Close>
+              </Item>
+              <Item value="facts">
+                <Trigger>Facts</Trigger>
+                <Content aria-label="Facts">
+                  <Item value="history">
+                    <Link href="#history">History</Link>
+                  </Item>
+                  <Item value="close-current">
+                    <Close target="current">Close Facts</Close>
+                  </Item>
+                </Content>
+              </Item>
+            </Content>
+          </Item>
+        </List>
+      </Root>
+    </div>
+  );
+}
+
+describe("Close component", () => {
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  test("click Close with default target closes all menus", async () => {
+    render(<CloseMenu />);
+    // Open About
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Click Dismiss All (target="root" by default)
+    await act(() => { fireEvent.click(screen.getByText("Dismiss All")); });
+    expect(getPath()).toEqual([]);
+  });
+
+  test("click Close with target='current' closes only containing menu", async () => {
+    render(<CloseMenu />);
+    // Open About > Facts
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    expect(getPath()).toEqual(["about", "facts"]);
+
+    // Click Close Facts (target="current")
+    await act(() => { fireEvent.click(screen.getByText("Close Facts")); });
+    // Facts closes but About stays open
+    expect(getPath()).toEqual(["about"]);
+  });
+
+  test("focus returns to menubar trigger after target='root' close", async () => {
+    render(<CloseMenu />);
+    const aboutTrigger = screen.getByText("About");
+
+    // Open About
+    await act(() => { fireEvent.click(aboutTrigger); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Click Dismiss All
+    await act(() => { fireEvent.click(screen.getByText("Dismiss All")); });
+    expect(getPath()).toEqual([]);
+
+    // Focus should be on the About trigger
+    expect(aboutTrigger.getAttribute("tabindex")).toBe("0");
+  });
+
+  test("Enter activates Close menuitem", async () => {
+    render(<CloseMenu />);
+    // Open About
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Press Enter on Dismiss All
+    const closeBtn = screen.getByText("Dismiss All");
+    await act(() => { fireEvent.keyDown(closeBtn, { key: "Enter" }); });
+    expect(getPath()).toEqual([]);
+  });
+
+  test("Space activates Close menuitem", async () => {
+    render(<CloseMenu />);
+    // Open About
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Press Space on Dismiss All
+    const closeBtn = screen.getByText("Dismiss All");
+    await act(() => { fireEvent.keyDown(closeBtn, { key: " " }); });
+    expect(getPath()).toEqual([]);
+  });
+
+  test("Close renders with correct ARIA attributes", async () => {
+    render(<CloseMenu />);
+    // Open About to make Close visible
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+
+    const closeBtn = screen.getByText("Dismiss All");
+    expect(closeBtn.getAttribute("role")).toBe("menuitem");
+    expect(closeBtn.getAttribute("tabindex")).toBe("-1");
+    expect(closeBtn.hasAttribute("data-naavi-close")).toBe(true);
+    expect(closeBtn.tagName).toBe("BUTTON");
   });
 });

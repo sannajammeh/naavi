@@ -108,6 +108,12 @@ export interface LinkProps extends useRender.ComponentProps<"a"> {
   closeOnClick?: boolean;
 }
 
+export interface CloseProps extends useRender.ComponentProps<"button"> {
+  children: React.ReactNode;
+  /** Close scope: "root" closes all menus, "current" closes only the containing menu. @default "root" */
+  target?: "root" | "current";
+}
+
 export interface SeparatorProps extends useRender.ComponentProps<"li"> {}
 
 export interface ViewportProps extends useRender.ComponentProps<"div", OpenState> {}
