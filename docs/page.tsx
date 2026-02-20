@@ -151,6 +151,31 @@ const CSS_FULL = `/* Full — all patterns combined (minimal) */
   list-style: none;
 }`;
 
+const CLOSE_EXAMPLE = `<NavigationMenu.Item value="docs">
+  <NavigationMenu.Trigger>Docs</NavigationMenu.Trigger>
+  <NavigationMenu.Content aria-label="Docs">
+    <NavigationMenu.Item value="guide">
+      <NavigationMenu.Link href="/guide">Guide</NavigationMenu.Link>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item value="api">
+      <NavigationMenu.Trigger>API</NavigationMenu.Trigger>
+      <NavigationMenu.Content aria-label="API">
+        <NavigationMenu.Item value="components">
+          <NavigationMenu.Link href="/components">Components</NavigationMenu.Link>
+        </NavigationMenu.Item>
+        {/* Closes only the "API" submenu, stays in "Docs" */}
+        <NavigationMenu.Item value="close-api">
+          <NavigationMenu.Close target="current">← Back</NavigationMenu.Close>
+        </NavigationMenu.Item>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    {/* Closes all menus entirely */}
+    <NavigationMenu.Item value="close-all">
+      <NavigationMenu.Close>Dismiss ✕</NavigationMenu.Close>
+    </NavigationMenu.Item>
+  </NavigationMenu.Content>
+</NavigationMenu.Item>`;
+
 const NESTED_EXAMPLE = `<NavigationMenu.Item value="products">
   <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
   <NavigationMenu.Content aria-label="Products">
@@ -372,6 +397,49 @@ function LiveSeparators() {
               </NavigationMenu.Item>
               <NavigationMenu.Item value="paste">
                 <NavigationMenu.Link href="#paste">Paste</NavigationMenu.Link>
+              </NavigationMenu.Item>
+            </NavigationMenu.Content>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>
+    </div>
+  );
+}
+
+function LiveClose() {
+  return (
+    <div className="example-wrapper">
+      <NavigationMenu.Root aria-label="Close example">
+        <NavigationMenu.List>
+          <NavigationMenu.Item value="docs">
+            <NavigationMenu.Trigger href="#docs">
+              Docs
+              <DownArrow />
+            </NavigationMenu.Trigger>
+            <NavigationMenu.Content aria-label="Docs">
+              <NavigationMenu.Item value="guide">
+                <NavigationMenu.Link href="#guide">Guide</NavigationMenu.Link>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="api">
+                <NavigationMenu.Trigger href="#api">
+                  API
+                  <RightArrow />
+                </NavigationMenu.Trigger>
+                <NavigationMenu.Content aria-label="API">
+                  <NavigationMenu.Item value="components">
+                    <NavigationMenu.Link href="#components">
+                      Components
+                    </NavigationMenu.Link>
+                  </NavigationMenu.Item>
+                  <NavigationMenu.Item value="close-api">
+                    <NavigationMenu.Close target="current">
+                      ← Back
+                    </NavigationMenu.Close>
+                  </NavigationMenu.Item>
+                </NavigationMenu.Content>
+              </NavigationMenu.Item>
+              <NavigationMenu.Item value="close-all">
+                <NavigationMenu.Close>Dismiss ✕</NavigationMenu.Close>
               </NavigationMenu.Item>
             </NavigationMenu.Content>
           </NavigationMenu.Item>
@@ -675,10 +743,8 @@ export function Page() {
             {/* Examples */}
             <h2># Examples</h2>
             <p className="section-desc">
-              Live rendered examples. These are actual naavi components
-              server-rendered with their real ARIA roles and data attributes.
-              Open the playground at <code>localhost:3000</code> for interactive
-              demos with keyboard and hover.
+              Live rendered examples — actual naavi components with their real
+              ARIA roles and data attributes.
             </p>
 
             <ExampleTabs
@@ -800,6 +866,13 @@ export function Page() {
   </NavigationMenu.List>
 </NavigationMenu.Root>`}
               css={CSS_SEPARATOR}
+            />
+
+            <ExampleTabs
+              label="Close button"
+              preview={<LiveClose />}
+              code={CLOSE_EXAMPLE}
+              css={CSS_NESTED}
             />
 
             <ExampleTabs
@@ -950,6 +1023,19 @@ export function Page() {
                     <code>{"<div>"}</code>
                   </td>
                   <td>Optional container for Content portaling.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>Close</code>
+                  </td>
+                  <td>
+                    <code>{"<button>"}</code>
+                  </td>
+                  <td>
+                    Dismiss button with <code>role="menuitem"</code>. Closes all
+                    menus or just the containing one via <code>target</code>{" "}
+                    prop.
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -1122,6 +1208,31 @@ export function Page() {
               </tbody>
             </table>
 
+            <h3>## Close</h3>
+            <table className="api-table">
+              <thead>
+                <tr>
+                  <th>Prop</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <PropRow
+                  name="target"
+                  type='"root" | "current"'
+                  def='"root"'
+                  desc='"root" closes all menus and focuses the menubar trigger. "current" closes only the directly containing menu.'
+                />
+                <PropRow
+                  name="children"
+                  type="React.ReactNode"
+                  desc="Button label."
+                />
+              </tbody>
+            </table>
+
             <h3>## Portal</h3>
             <table className="api-table">
               <thead>
@@ -1229,6 +1340,7 @@ export function Page() {
 [data-naavi-trigger] { }
 [data-naavi-content] { }
 [data-naavi-link] { }
+[data-naavi-close] { }
 [data-naavi-viewport] { }`}</Code>
 
             {/* Peer deps */}
