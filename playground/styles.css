@@ -187,3 +187,174 @@ nav {
     fill: #666;
     margin-left: auto;
 }
+
+/* ==========================================================================
+   Store demo — mega menu layout (mirrors real MenuStructure.module.css)
+   ========================================================================== */
+
+.store-page {
+    margin: 0 auto;
+}
+
+.store-header {
+    padding: 1rem 2rem;
+    background: #111;
+    color: #fff;
+}
+
+.store-logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.store-page nav {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.store-menubar {
+    padding: 0 2rem !important;
+}
+
+.store-menubar > [role="none"] {
+    position: static !important;
+}
+
+.store-page [role="menubar"] > [role="none"] > [role="menuitem"] {
+    color: #111;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+}
+
+.store-page [role="menubar"] > [role="none"] > [role="menuitem"]:hover,
+.store-page [role="menubar"] > [role="none"] > [role="menuitem"]:focus {
+    background: transparent;
+    outline: none;
+    text-decoration: underline;
+}
+
+/* Mega dropdown: full-width below the nav */
+.store-mega {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100%;
+    border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 2rem !important;
+    min-width: unset;
+    min-height: 400px;
+}
+
+/* Grid layout: links on left, campaign cards on right */
+.store-grid-layout[data-state="open"] {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    max-width: 1200px;
+    position: relative;
+}
+
+/* All Items (links/triggers) go in the left column */
+.store-grid-layout > [role="none"] {
+    grid-column: 1;
+}
+
+/* Campaign cards go in the right column */
+.store-cards {
+    grid-column: 2 !important;
+    grid-row: 1 / -1;
+    padding: 0 2rem;
+    background: #f9f9f9;
+    list-style: none;
+}
+
+.store-cards-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+.store-campaign-card {
+    background: #e0e0e0;
+    border-radius: 8px;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Menu items inside the mega dropdown */
+.store-mega [role="menuitem"] {
+    padding: 0.65rem 0;
+    font-size: 1.05rem;
+    font-weight: 400;
+}
+
+.store-mega [role="menuitem"]:hover,
+.store-mega [role="menuitem"]:focus {
+    background: #f5f5f5;
+    outline: none;
+    text-decoration: underline;
+}
+
+.store-mega [role="separator"] {
+    margin: 0.5rem 0;
+}
+
+/* Back button */
+.store-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.store-back:hover {
+    color: #111;
+}
+
+/* Sub-content: overlays the full mega area */
+.store-subcontent {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0;
+    width: 100% !important;
+    min-width: unset !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    padding: 1.5rem 2rem !important;
+    min-height: 400px;
+}
+
+.store-main {
+    padding: 3rem 2rem;
+}
+
+.store-main h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.store-main p {
+    color: #666;
+    line-height: 1.6;
+}

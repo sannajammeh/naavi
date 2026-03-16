@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { SAFE_TRIANGLE_ANCHOR_SELECTOR } from "./constants.ts";
 
 // ---------------------------------------------------------------------------
 // Geometry
@@ -69,29 +70,48 @@ export function computeTrianglePoints(
     return null;
   }
 
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-
-  const dx = cursorX - cx;
-  const dy = cursorY - cy;
-
-  // Determine primary direction based on which axis has larger offset
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    // Horizontal: cursor is to the left or right of content
-    if (dx < 0) {
-      // Cursor is LEFT of content → flyout opens to the right
-      return [cursor, { x: rect.left, y: rect.top }, { x: rect.left, y: rect.bottom }];
-    }
-    // Cursor is RIGHT of content → flyout opens to the left
-    return [cursor, { x: rect.right, y: rect.top }, { x: rect.right, y: rect.bottom }];
-  }
-  // Vertical: cursor is above or below content
-  if (dy < 0) {
-    // Cursor is ABOVE content → dropdown below
+  // Prioritize vertical position: if cursor is above or below the rect,
+  // always target the nearest horizontal edge. This ensures dropdown menus
+  // always get a triangle to the top edge regardless of horizontal offset.
+  if (cursorY <= rect.top) {
+    // Cursor is ABOVE content → target top edge
     return [cursor, { x: rect.left, y: rect.top }, { x: rect.right, y: rect.top }];
   }
-  // Cursor is BELOW content → dropdown above
-  return [cursor, { x: rect.left, y: rect.bottom }, { x: rect.right, y: rect.bottom }];
+  if (cursorY >= rect.bottom) {
+    // Cursor is BELOW content → target bottom edge
+    return [cursor, { x: rect.left, y: rect.bottom }, { x: rect.right, y: rect.bottom }];
+  }
+  // Cursor is vertically within the rect → use left/right edge (flyout case)
+  if (cursorX < rect.left) {
+    return [cursor, { x: rect.left, y: rect.top }, { x: rect.left, y: rect.bottom }];
+  }
+  return [cursor, { x: rect.right, y: rect.top }, { x: rect.right, y: rect.bottom }];
+}
+
+/**
+ * If the content element contains a child with data-safe-triangle-anchor,
+ * use that child's rect instead of the content element's rect.
+ */
+function resolveTargetRect(contentEl: HTMLElement): DOMRect {
+  // 1. Explicit anchor takes priority
+  const anchor = contentEl.querySelector<HTMLElement>(SAFE_TRIANGLE_ANCHOR_SELECTOR);
+  if (anchor) return anchor.getBoundingClientRect();
+
+  // 2. Auto-adjust: use the first menuitem's top to skip padding/spacing
+  //    that pushes links down inside the content element.
+  const firstItem = contentEl.querySelector<HTMLElement>('[role="menuitem"]');
+  if (firstItem) {
+    const contentRect = contentEl.getBoundingClientRect();
+    const itemRect = firstItem.getBoundingClientRect();
+    return new DOMRect(
+      contentRect.left,
+      itemRect.top,
+      contentRect.width,
+      contentRect.bottom - itemRect.top,
+    );
+  }
+
+  return contentEl.getBoundingClientRect();
 }
 
 // ---------------------------------------------------------------------------
@@ -148,7 +168,7 @@ export function useSafeTriangle(opts: {
       const deepestEl = getDeepestContentEl();
       if (!deepestEl) return false;
 
-      const rect = deepestEl.getBoundingClientRect();
+      const rect = resolveTargetRect(deepestEl);
       const tri = computeTrianglePoints(x, y, rect);
       if (!tri) return false; // cursor inside content rect
 
@@ -170,7 +190,7 @@ export function useSafeTriangle(opts: {
         return;
       }
 
-      const rect = deepestEl.getBoundingClientRect();
+      const rect = resolveTargetRect(deepestEl);
       const tri = computeTrianglePoints(x, y, rect);
       setTriangle(tri);
     },

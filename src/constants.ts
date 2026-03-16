@@ -24,6 +24,10 @@ export const PORTAL_ATTR = "data-naavi-portal";
 /** Data attribute placed on the safe triangle debug overlay. */
 export const SAFE_TRIANGLE_ATTR = "data-naavi-safe-triangle";
 
+/** Data attribute for overriding the safe triangle target rect. */
+export const SAFE_TRIANGLE_ANCHOR_ATTR = "data-safe-triangle-anchor";
+export const SAFE_TRIANGLE_ANCHOR_SELECTOR = `[${SAFE_TRIANGLE_ANCHOR_ATTR}]`;
+
 /** Selector for menuitem role elements. */
 export const MENUITEM_SELECTOR = '[role="menuitem"]';
 
