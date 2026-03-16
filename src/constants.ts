@@ -21,6 +21,9 @@ export const CLOSE_SELECTOR = `[${CLOSE_ATTR}]`;
 /** Data attribute placed on portal-created containers. */
 export const PORTAL_ATTR = "data-naavi-portal";
 
+/** Data attribute placed on the safe triangle debug overlay. */
+export const SAFE_TRIANGLE_ATTR = "data-naavi-safe-triangle";
+
 /** Selector for menuitem role elements. */
 export const MENUITEM_SELECTOR = '[role="menuitem"]';
 

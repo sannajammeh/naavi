@@ -16,7 +16,7 @@ export function App() {
         <div className="tagline">Navigation Menu Component Playground</div>
       </header>
 
-      <Root aria-label="Mythical University">
+      <Root aria-label="Mythical University" debugSafeTriangle>
         <List>
           {/* Home — simple link, no submenu */}
           <Item value="home">

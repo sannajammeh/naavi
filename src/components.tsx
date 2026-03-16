@@ -22,6 +22,7 @@ import {
   useSettings,
 } from "./context.ts";
 import { useMenuKeyboard } from "./keyboard.ts";
+import { useSafeTriangle, SafeTriangleOverlay } from "./safe-triangle.tsx";
 import {
   Ids,
   TRIGGER_ATTR,
@@ -61,6 +62,8 @@ export function Root({
   hideDelay = 200,
   closeOnClick = true,
   hideOnBlur = true,
+  safeTriangle: safeTriangleProp = true,
+  debugSafeTriangle = false,
   ...navProps
 }: RootProps) {
   const [internalPath, setInternalPath] = useState<string[]>([]);
@@ -97,6 +100,12 @@ export function Root({
   const effectiveArmed =
     openOnHover === true ? true : openOnHover === false ? false : armed;
 
+  const { api: safeTriangleApi, triangle: safeTriangleDebug } = useSafeTriangle({
+    enabled: safeTriangleProp,
+    openPath,
+    debug: debugSafeTriangle,
+  });
+
   const ctx: RootContextValue = useMemo(
     () => ({
       openPath,
@@ -110,6 +119,7 @@ export function Root({
       navRef,
       viewport,
       setViewport,
+      safeTriangle: safeTriangleApi,
     }),
     [
       openPath,
@@ -120,6 +130,7 @@ export function Root({
       closeOnClick,
       hideOnBlur,
       viewport,
+      safeTriangleApi,
     ],
   );
 
@@ -179,12 +190,29 @@ export function Root({
     }
   }, []);
 
+  // Debug: track cursor globally so the overlay updates even over submenus.
+  // Use a ref so the listener is stable and doesn't re-attach on every render.
+  const safeTriangleApiRef = useRef(safeTriangleApi);
+  safeTriangleApiRef.current = safeTriangleApi;
+
+  useEffect(() => {
+    if (!debugSafeTriangle) return;
+    function onMouseMove(e: MouseEvent) {
+      safeTriangleApiRef.current?.updateCursor(e.clientX, e.clientY);
+    }
+    window.addEventListener("mousemove", onMouseMove);
+    return () => window.removeEventListener("mousemove", onMouseMove);
+  }, [debugSafeTriangle]);
+
   return (
     <RootContext.Provider value={ctx}>
       <SettingsContext.Provider value={settings}>
         <nav ref={navRef} onKeyDown={onKeyDown} {...navProps}>
           {children}
         </nav>
+        {debugSafeTriangle && openPath.length > 0 && (
+          <SafeTriangleOverlay triangle={safeTriangleDebug} />
+        )}
       </SettingsContext.Provider>
     </RootContext.Provider>
   );
@@ -289,18 +317,30 @@ export function Trigger({
   );
 
   // 6.3 — Hover: mouseenter cancels hide timer, opens if armed
-  const handleMouseEnter = useCallback(() => {
-    if (ctx.hideTimeout.current) {
-      clearTimeout(ctx.hideTimeout.current);
-      ctx.hideTimeout.current = null;
-    }
-    // effectiveOpenOnHover: true = always hover, false = never hover, undefined = armed state
-    if (effectiveOpenOnHover === false) return;
-    if (effectiveOpenOnHover === true || ctx.armed || ctx.openPath.length > 0) {
-      const next = [...ctx.openPath.slice(0, depth), value];
-      ctx.setOpenPath(next);
-    }
-  }, [ctx, value, depth, effectiveOpenOnHover]);
+  const handleMouseEnter = useCallback(
+    (e: React.MouseEvent) => {
+      if (ctx.hideTimeout.current) {
+        clearTimeout(ctx.hideTimeout.current);
+        ctx.hideTimeout.current = null;
+      }
+      // effectiveOpenOnHover: true = always hover, false = never hover, undefined = armed state
+      if (effectiveOpenOnHover === false) return;
+      if (effectiveOpenOnHover === true || ctx.armed || ctx.openPath.length > 0) {
+        // Safe triangle: suppress switch if cursor is inside the triangle toward open submenu
+        if (
+          ctx.safeTriangle?.enabled &&
+          ctx.openPath[depth] &&
+          ctx.openPath[depth] !== value &&
+          ctx.safeTriangle.isInsideTriangle(e.clientX, e.clientY)
+        ) {
+          return;
+        }
+        const next = [...ctx.openPath.slice(0, depth), value];
+        ctx.setOpenPath(next);
+      }
+    },
+    [ctx, value, depth, effectiveOpenOnHover],
+  );
 
   // 6.3 — Hover: mouseleave starts hide timer (depth-scoped)
   const handleMouseLeave = useCallback(() => {
@@ -363,6 +403,36 @@ export function Content({
   const triggerId = Ids.trigger(value);
   const contentId = Ids.content(value);
 
+  // Register/unregister content element with safe triangle system.
+  // setContentEl is a stable callback (useCallback with [] deps), so
+  // we capture it in a ref to avoid re-running effects when ctx changes.
+  const setContentEl = ctx.safeTriangle?.setContentEl;
+  const setContentElRef = useRef(setContentEl);
+  setContentElRef.current = setContentEl;
+
+  const contentNodeRef = useRef<HTMLElement | null>(null);
+  const contentRefCallback = useCallback(
+    (el: HTMLElement | null) => {
+      contentNodeRef.current = el;
+      if (el) {
+        setContentElRef.current?.(value, el);
+      }
+    },
+    [value],
+  );
+
+  // Register when open, unregister when closed or unmounted
+  useEffect(() => {
+    if (isOpen && contentNodeRef.current) {
+      setContentElRef.current?.(value, contentNodeRef.current);
+    } else {
+      setContentElRef.current?.(value, null);
+    }
+    return () => {
+      setContentElRef.current?.(value, null);
+    };
+  }, [isOpen, value]);
+
   // 6.3 — Hover on content: cancel hide timer
   const handleMouseEnter = useCallback(() => {
     if (ctx.hideTimeout.current) {
@@ -387,6 +457,7 @@ export function Content({
 
   const defaultProps: Record<string, unknown> = {
     id: contentId,
+    ref: contentRefCallback,
     role: "menu",
     "aria-labelledby": triggerId,
     "aria-label": ariaLabel,
@@ -459,16 +530,26 @@ export function Link({
   );
 
   // Cancel pending hide timer and close submenus deeper than this link
-  const handleMouseEnter = useCallback(() => {
-    if (ctx.hideTimeout.current) {
-      clearTimeout(ctx.hideTimeout.current);
-      ctx.hideTimeout.current = null;
-    }
-    // Close any submenus deeper than this link's depth
-    if (ctx.openPath.length > depth) {
-      ctx.setOpenPath(ctx.openPath.slice(0, depth));
-    }
-  }, [ctx, depth]);
+  const handleMouseEnter = useCallback(
+    (e: React.MouseEvent) => {
+      if (ctx.hideTimeout.current) {
+        clearTimeout(ctx.hideTimeout.current);
+        ctx.hideTimeout.current = null;
+      }
+      // Close any submenus deeper than this link's depth
+      if (ctx.openPath.length > depth) {
+        // Safe triangle: suppress close if cursor is inside the triangle toward open submenu
+        if (
+          ctx.safeTriangle?.enabled &&
+          ctx.safeTriangle.isInsideTriangle(e.clientX, e.clientY)
+        ) {
+          return;
+        }
+        ctx.setOpenPath(ctx.openPath.slice(0, depth));
+      }
+    },
+    [ctx, depth],
+  );
 
   const defaultProps: Record<string, unknown> = {
     role: "menuitem",

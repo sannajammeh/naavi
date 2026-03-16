@@ -5,6 +5,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { Root, List, Item, Trigger, Content, Link, Close } from "./components.tsx";
 import * as NavigationMenu from "./components.tsx";
 import { NavigationMenu as NavigationMenuFromIndex } from "./index.ts";
+import { pointInTriangle, computeTrianglePoints } from "./safe-triangle.tsx";
 
 /**
  * Controlled wrapper to inspect openPath via onValueChange.
@@ -554,5 +555,187 @@ describe("Close component", () => {
     expect(closeBtn.getAttribute("tabindex")).toBe("-1");
     expect(closeBtn.hasAttribute("data-naavi-close")).toBe(true);
     expect(closeBtn.tagName).toBe("BUTTON");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Safe Triangle — geometry unit tests
+// ---------------------------------------------------------------------------
+
+describe("pointInTriangle", () => {
+  // Triangle: (0,0), (10,0), (5,10)
+  test("point inside triangle returns true", () => {
+    expect(pointInTriangle(5, 3, 0, 0, 10, 0, 5, 10)).toBe(true);
+  });
+
+  test("point outside triangle returns false", () => {
+    expect(pointInTriangle(0, 10, 0, 0, 10, 0, 5, 10)).toBe(false);
+  });
+
+  test("point on edge returns true (boundary)", () => {
+    // Midpoint of edge (0,0)→(10,0) is (5,0)
+    expect(pointInTriangle(5, 0, 0, 0, 10, 0, 5, 10)).toBe(true);
+  });
+
+  test("point on vertex returns true", () => {
+    expect(pointInTriangle(0, 0, 0, 0, 10, 0, 5, 10)).toBe(true);
+  });
+
+  test("point far outside returns false", () => {
+    expect(pointInTriangle(100, 100, 0, 0, 10, 0, 5, 10)).toBe(false);
+  });
+});
+
+describe("computeTrianglePoints", () => {
+  test("cursor above content returns top-edge triangle", () => {
+    const rect = new DOMRect(100, 200, 150, 100); // left=100, top=200, w=150, h=100
+    const result = computeTrianglePoints(175, 100, rect); // cursor above center
+    expect(result).not.toBeNull();
+    // Should be [cursor, top-left, top-right]
+    expect(result![0]).toEqual({ x: 175, y: 100 });
+    expect(result![1]).toEqual({ x: 100, y: 200 });
+    expect(result![2]).toEqual({ x: 250, y: 200 });
+  });
+
+  test("cursor left of content returns left-edge triangle", () => {
+    const rect = new DOMRect(200, 100, 100, 150); // left=200, top=100, w=100, h=150
+    const result = computeTrianglePoints(50, 175, rect); // cursor left of center
+    expect(result).not.toBeNull();
+    expect(result![0]).toEqual({ x: 50, y: 175 });
+    expect(result![1]).toEqual({ x: 200, y: 100 });
+    expect(result![2]).toEqual({ x: 200, y: 250 });
+  });
+
+  test("cursor right of content returns right-edge triangle", () => {
+    const rect = new DOMRect(100, 100, 100, 150);
+    const result = computeTrianglePoints(350, 175, rect);
+    expect(result).not.toBeNull();
+    expect(result![0]).toEqual({ x: 350, y: 175 });
+    expect(result![1]).toEqual({ x: 200, y: 100 });
+    expect(result![2]).toEqual({ x: 200, y: 250 });
+  });
+
+  test("cursor inside rect returns null", () => {
+    const rect = new DOMRect(100, 100, 200, 200);
+    expect(computeTrianglePoints(200, 200, rect)).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Safe Triangle — integration tests
+// ---------------------------------------------------------------------------
+
+/**
+ * Menu with safe triangle enabled/disabled for integration tests.
+ * About > [Overview link, Administration link, Facts > [History link]]
+ */
+function SafeTriangleMenu(props: { safeTriangle?: boolean }) {
+  const { safeTriangle } = props;
+  const [path, setPath] = useState<string[]>([]);
+
+  return (
+    <div>
+      <span data-testid="path">{JSON.stringify(path)}</span>
+      <Root
+        aria-label="ST Menu"
+        hideDelay={50}
+        value={path}
+        onValueChange={setPath}
+        safeTriangle={safeTriangle}
+      >
+        <List>
+          <Item value="about">
+            <Trigger>About</Trigger>
+            <Content aria-label="About">
+              <Item value="overview">
+                <Link href="#overview">Overview</Link>
+              </Item>
+              <Item value="administration">
+                <Link href="#administration">Administration</Link>
+              </Item>
+              <Item value="facts">
+                <Trigger>Facts</Trigger>
+                <Content aria-label="Facts">
+                  <Item value="history">
+                    <Link href="#history">History</Link>
+                  </Item>
+                </Content>
+              </Item>
+            </Content>
+          </Item>
+          <Item value="help">
+            <Trigger>Help</Trigger>
+            <Content aria-label="Help">
+              <Item value="support">
+                <Link href="#support">Support</Link>
+              </Item>
+            </Content>
+          </Item>
+        </List>
+      </Root>
+    </div>
+  );
+}
+
+describe("safe triangle integration", () => {
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  test("safeTriangle={false} — sibling hover always switches (no suppression)", async () => {
+    render(<SafeTriangleMenu safeTriangle={false} />);
+
+    // Open About
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Open Facts submenu
+    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    expect(getPath()).toEqual(["about", "facts"]);
+
+    // Hover Overview — should close Facts (no safe triangle)
+    await act(() => {
+      fireEvent.mouseEnter(screen.getByText("Overview"), { clientX: 0, clientY: 0 });
+    });
+    expect(getPath()).toEqual(["about"]);
+  });
+
+  test("safeTriangle default (true) — mouseEnter with clientX/Y=0 still works normally", async () => {
+    render(<SafeTriangleMenu />);
+
+    // Open About
+    await act(() => { fireEvent.click(screen.getByText("About")); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Open Facts submenu
+    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    expect(getPath()).toEqual(["about", "facts"]);
+
+    // Hover Overview with default coords (0,0) — safe triangle check runs
+    // but since getBoundingClientRect returns zeros in jsdom, the triangle
+    // computation should not block the switch
+    await act(() => {
+      fireEvent.mouseEnter(screen.getByText("Overview"), { clientX: 0, clientY: 0 });
+    });
+    expect(getPath()).toEqual(["about"]);
+  });
+
+  test("keyboard navigation still works with safe triangle enabled", async () => {
+    render(<SafeTriangleMenu />);
+
+    const aboutTrigger = screen.getByText("About");
+
+    // Open via click
+    await act(() => { fireEvent.click(aboutTrigger); });
+    expect(getPath()).toEqual(["about"]);
+
+    // Navigate with keyboard — Enter on Facts trigger
+    const factsTrigger = screen.getByText("Facts");
+    await act(() => { fireEvent.keyDown(factsTrigger, { key: "Enter" }); });
+    expect(getPath()).toEqual(["about", "facts"]);
+
+    // Escape should close Facts
+    await act(() => { fireEvent.keyDown(factsTrigger, { key: "Escape" }); });
+    expect(getPath()).toEqual(["about"]);
   });
 });
