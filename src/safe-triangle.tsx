@@ -193,21 +193,23 @@ export function useSafeTriangle(opts: {
   );
 
   const updateCursor = useCallback(
-    (_x: number, _y: number) => {
+    (x: number, y: number) => {
+      // Keep origin tracking the cursor so the triangle stays narrow
+      originRef.current = { x, y };
+
       if (!debug || !enabled || openPath.length === 0) {
         setTriangle(null);
         return;
       }
 
-      const origin = originRef.current;
       const deepestEl = getDeepestContentEl();
-      if (!deepestEl || !origin) {
+      if (!deepestEl) {
         setTriangle(null);
         return;
       }
 
       const rect = resolveTargetRect(deepestEl);
-      const tri = computeTrianglePoints(origin.x, origin.y, rect);
+      const tri = computeTrianglePoints(x, y, rect);
       setTriangle(tri);
     },
     [debug, enabled, openPath, getDeepestContentEl],
