@@ -17,6 +17,7 @@ export interface OpenState {
 export interface SafeTriangleContextValue {
   isInsideTriangle: (x: number, y: number) => boolean;
   setContentEl: (value: string, el: HTMLElement | null) => void;
+  setOrigin: (x: number, y: number) => void;
   updateCursor: (x: number, y: number) => void;
   enabled: boolean;
 }

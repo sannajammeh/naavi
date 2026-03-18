@@ -190,19 +190,19 @@ export function Root({
     }
   }, []);
 
-  // Debug: track cursor globally so the overlay updates even over submenus.
+  // Track cursor globally so the safe triangle origin follows the mouse.
   // Use a ref so the listener is stable and doesn't re-attach on every render.
   const safeTriangleApiRef = useRef(safeTriangleApi);
   safeTriangleApiRef.current = safeTriangleApi;
 
   useEffect(() => {
-    if (!debugSafeTriangle) return;
+    if (!safeTriangleApi.enabled) return;
     function onMouseMove(e: MouseEvent) {
       safeTriangleApiRef.current?.updateCursor(e.clientX, e.clientY);
     }
     window.addEventListener("mousemove", onMouseMove);
     return () => window.removeEventListener("mousemove", onMouseMove);
-  }, [debugSafeTriangle]);
+  }, [safeTriangleApi.enabled]);
 
   return (
     <RootContext.Provider value={ctx}>
@@ -337,6 +337,7 @@ export function Trigger({
         }
         const next = [...ctx.openPath.slice(0, depth), value];
         ctx.setOpenPath(next);
+        ctx.safeTriangle?.setOrigin(e.clientX, e.clientY);
       }
     },
     [ctx, value, depth, effectiveOpenOnHover],

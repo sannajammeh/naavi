@@ -24,7 +24,7 @@ export function Store() {
             <Content
               aria-label="Jewelry"
               className="store-mega store-grid-layout"
-              openOnHover
+              openOnHover={false}
             >
               <Item value="back-jewelry">
                 <Close className="store-back" target="current">
@@ -76,6 +76,7 @@ export function Store() {
                 <Content
                   aria-label="Rings"
                   className="store-mega store-grid-layout store-subcontent"
+                  openOnHover={false}
                 >
                   <Item value="back-rings">
                     <Close className="store-back" target="current">
@@ -108,6 +109,7 @@ export function Store() {
                 <Content
                   aria-label="Necklaces"
                   className="store-mega store-grid-layout store-subcontent"
+                  openOnHover={false}
                 >
                   <Item value="back-necklaces">
                     <Close className="store-back" target="current">
@@ -140,6 +142,7 @@ export function Store() {
                 <Content
                   aria-label="Earrings"
                   className="store-mega store-grid-layout store-subcontent"
+                  openOnHover={false}
                 >
                   <Item value="back-earrings">
                     <Close className="store-back" target="current">
@@ -195,7 +198,6 @@ export function Store() {
             <Content
               aria-label="Watches"
               className="store-mega store-grid-layout"
-              openOnHover
             >
               <Item value="back-watches">
                 <Close className="store-back" target="current">
@@ -225,7 +227,6 @@ export function Store() {
             <Content
               aria-label="Occasions"
               className="store-mega store-grid-layout"
-              openOnHover
             >
               <Item value="back-occasions">
                 <Close className="store-back" target="current">

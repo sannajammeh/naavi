@@ -189,33 +189,54 @@ nav {
 }
 
 /* ==========================================================================
-   Store demo — mega menu layout (mirrors real MenuStructure.module.css)
+   Store demo — Scandinavian luxury jewelry mega menu
    ========================================================================== */
 
 .store-page {
+    --gold: #b8956a;
+    --gold-light: #d4b896;
+    --gold-muted: rgba(184, 149, 106, 0.12);
+    --charcoal: #1a1a1a;
+    --charcoal-soft: #2d2d2d;
+    --cream: #faf8f5;
+    --cream-dark: #f0ece6;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --border: rgba(184, 149, 106, 0.2);
+
     margin: 0 auto;
+    font-family: "DM Sans", sans-serif;
+    background: var(--cream);
+    color: var(--ink);
 }
 
+/* ---- Header ---- */
 .store-header {
-    padding: 1rem 2rem;
-    background: #111;
-    color: #fff;
+    padding: 1.25rem 2.5rem;
+    background: var(--charcoal);
+    display: flex;
+    align-items: center;
 }
 
 .store-logo {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--gold-light);
 }
 
+/* ---- Nav bar ---- */
 .store-page nav {
     background: #fff;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
 }
 
 .store-menubar {
-    padding: 0 2rem !important;
+    padding: 0 2.5rem !important;
+    gap: 0.25rem;
 }
 
 .store-menubar > [role="none"] {
@@ -223,19 +244,43 @@ nav {
 }
 
 .store-page [role="menubar"] > [role="none"] > [role="menuitem"] {
-    color: #111;
+    color: var(--ink);
+    font-family: "DM Sans", sans-serif;
     font-weight: 500;
-    padding: 0.75rem 1.25rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.1rem;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.store-page [role="menubar"] > [role="none"] > [role="menuitem"]::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 1.1rem;
+    right: 1.1rem;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
 }
 
 .store-page [role="menubar"] > [role="none"] > [role="menuitem"]:hover,
 .store-page [role="menubar"] > [role="none"] > [role="menuitem"]:focus {
     background: transparent;
     outline: none;
-    text-decoration: underline;
+    text-decoration: none;
+    color: var(--gold);
 }
 
-/* Mega dropdown: full-width below the nav */
+.store-page [role="menubar"] > [role="none"] > [role="menuitem"]:hover::after,
+.store-page [role="menubar"] > [role="none"] > [role="menuitem"]:focus::after {
+    transform: scaleX(1);
+}
+
+/* ---- Mega dropdown ---- */
 .store-mega {
     position: absolute !important;
     top: 100% !important;
@@ -243,93 +288,162 @@ nav {
     right: 0 !important;
     width: 100%;
     border: none;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    padding: 1.5rem 2rem !important;
+    border-top: 1px solid var(--border);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 2rem 2.5rem !important;
     min-width: unset;
     min-height: 400px;
+    background: #fff;
+    animation: megaSlideIn 0.22s ease-out;
 }
 
-/* Grid layout: links on left, campaign cards on right */
+@keyframes megaSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Grid layout ---- */
 .store-grid-layout[data-state="open"] {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
+    grid-auto-flow: dense;
     max-width: 1200px;
     position: relative;
 }
 
-/* All Items (links/triggers) go in the left column */
 .store-grid-layout > [role="none"] {
     grid-column: 1;
 }
 
-/* Campaign cards go in the right column */
+/* ---- Campaign cards column ---- */
 .store-cards {
-    grid-column: 2 !important;
-    grid-row: 1 / -1;
-    padding: 0 2rem;
-    background: #f9f9f9;
+    grid-column: 2;
+    grid-row: 1 / span 100;
+    padding: 1rem 2.5rem;
+    background: var(--cream);
+    border-left: 1px solid var(--border);
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .store-cards-title {
-    font-size: 0.8rem;
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #888;
-    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 0.25rem;
 }
 
 .store-campaign-card {
-    background: #e0e0e0;
-    border-radius: 8px;
-    padding: 3rem 2rem;
+    background: linear-gradient(
+        135deg,
+        var(--cream-dark) 0%,
+        #e8e2d9 100%
+    );
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
     text-align: center;
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+    color: var(--ink-soft);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
-/* Menu items inside the mega dropdown */
+.store-campaign-card:hover {
+    border-color: var(--gold-light);
+    box-shadow: 0 2px 12px rgba(184, 149, 106, 0.15);
+}
+
+/* ---- Menu items inside mega ---- */
 .store-mega [role="menuitem"] {
-    padding: 0.65rem 0;
-    font-size: 1.05rem;
+    padding: 0.55rem 0.75rem;
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.9375rem;
     font-weight: 400;
+    color: var(--ink);
+    border-radius: 4px;
+    transition: background 0.15s ease, color 0.15s ease;
+    letter-spacing: 0.01em;
 }
 
 .store-mega [role="menuitem"]:hover,
 .store-mega [role="menuitem"]:focus {
-    background: #f5f5f5;
+    background: var(--gold-muted);
+    color: var(--charcoal);
     outline: none;
-    text-decoration: underline;
+    text-decoration: none;
+}
+
+/* Triggers with sub-arrows get gold accent on hover */
+.store-mega [role="menuitem"] .arrow {
+    transition: fill 0.15s ease, transform 0.15s ease;
+}
+
+.store-mega [role="menuitem"]:hover .arrow.right,
+.store-mega [role="menuitem"]:focus .arrow.right {
+    fill: var(--gold);
+    transform: translateX(2px);
 }
 
 .store-mega [role="separator"] {
-    margin: 0.5rem 0;
+    margin: 0.5rem 0.75rem;
+    background: var(--border);
 }
 
-/* Back button */
+/* ---- Back button ---- */
 .store-back {
     display: flex;
     align-items: center;
     gap: 0.5em;
-    padding: 0.5rem 0;
-    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold);
     background: none;
     border: none;
+    border-bottom: 1px solid var(--border);
     cursor: pointer;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    transition: color 0.15s ease;
+}
+
+.store-back .arrow {
+    fill: var(--gold) !important;
+    opacity: 1;
+    transition: transform 0.15s ease;
 }
 
 .store-back:hover {
-    color: #111;
+    color: var(--charcoal);
 }
 
-/* Sub-content: overlays the full mega area */
+.store-back:hover .arrow {
+    fill: var(--charcoal) !important;
+    transform: translateX(-2px);
+}
+
+/* ---- Sub-content overlay ---- */
 .store-subcontent {
     position: absolute !important;
     top: 0 !important;
@@ -341,20 +455,40 @@ nav {
     border: none !important;
     box-shadow: none !important;
     background: #fff !important;
-    padding: 1.5rem 2rem !important;
+    padding: 2rem 2.5rem !important;
     min-height: 400px;
+    animation: subSlideIn 0.18s ease-out;
 }
 
+@keyframes subSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ---- Main content area ---- */
 .store-main {
-    padding: 3rem 2rem;
+    padding: 4rem 2.5rem;
+    text-align: center;
 }
 
 .store-main h1 {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
 }
 
 .store-main p {
-    color: #666;
+    font-family: "DM Sans", sans-serif;
+    color: var(--ink-soft);
     line-height: 1.6;
+    font-size: 0.9375rem;
 }
