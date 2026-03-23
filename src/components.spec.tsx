@@ -75,7 +75,8 @@ describe("menu open/close basics", () => {
   test("mouseEnter trigger opens submenu when parent is open", async () => {
     render(<ControlledMenu />);
     await act(() => { fireEvent.click(screen.getByText("About")); });
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    const facts = screen.getByText("Facts");
+    await act(() => { fireEvent.mouseEnter(facts); fireEvent.mouseMove(facts); });
     expect(getPath()).toEqual(["about", "facts"]);
   });
 
@@ -117,7 +118,8 @@ describe("Link mouse-enter behavior", () => {
   test("link mouseEnter closes deeper submenus", async () => {
     render(<ControlledMenu />);
     await act(() => { fireEvent.click(screen.getByText("About")); });
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    const facts = screen.getByText("Facts");
+    await act(() => { fireEvent.mouseEnter(facts); fireEvent.mouseMove(facts); });
     expect(getPath()).toEqual(["about", "facts"]);
 
     // Hover a sibling link — should close Facts (depth 1+) immediately
@@ -246,7 +248,8 @@ describe("cascading settings context", () => {
   test("Root openOnHover={true} cascades to all triggers — hover opens without click", async () => {
     render(<CascadingMenu rootOpenOnHover={true} />);
     // Hover File trigger without any prior click — should open
-    await act(() => { fireEvent.mouseEnter(screen.getByText("File")); });
+    const file = screen.getByText("File");
+    await act(() => { fireEvent.mouseEnter(file); fireEvent.mouseMove(file); });
     expect(getPath()).toEqual(["file"]);
   });
 
@@ -255,11 +258,13 @@ describe("cascading settings context", () => {
       <NestedCascadingMenu />,
     );
     // Root has openOnHover=true, so hovering About should open
-    await act(() => { fireEvent.mouseEnter(screen.getByText("About")); });
+    const about = screen.getByText("About");
+    await act(() => { fireEvent.mouseEnter(about); fireEvent.mouseMove(about); });
     expect(getPath()).toEqual(["about"]);
 
     // About's Content has openOnHover=false, so hovering Facts inside should NOT open
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    const facts = screen.getByText("Facts");
+    await act(() => { fireEvent.mouseEnter(facts); fireEvent.mouseMove(facts); });
     // Facts should NOT be in the path — hover was blocked
     expect(getPath()).toEqual(["about"]);
 
@@ -278,11 +283,13 @@ describe("cascading settings context", () => {
       />,
     );
     // File trigger: rootOpenOnHover=false, no trigger override → hover should NOT open
-    await act(() => { fireEvent.mouseEnter(screen.getByText("File")); });
+    const file = screen.getByText("File");
+    await act(() => { fireEvent.mouseEnter(file); fireEvent.mouseMove(file); });
     expect(getPath()).toEqual([]);
 
     // Edit trigger: has openOnHover={true} override → hover should open
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Edit")); });
+    const edit = screen.getByText("Edit");
+    await act(() => { fireEvent.mouseEnter(edit); fireEvent.mouseMove(edit); });
     expect(getPath()).toEqual(["edit"]);
   });
 
@@ -292,7 +299,8 @@ describe("cascading settings context", () => {
     render(<NestedCascadingMenu />);
 
     // Open About via hover (root openOnHover=true)
-    await act(() => { fireEvent.mouseEnter(screen.getByText("About")); });
+    const about = screen.getByText("About");
+    await act(() => { fireEvent.mouseEnter(about); fireEvent.mouseMove(about); });
     expect(getPath()).toEqual(["about"]);
 
     // Click Facts to open its submenu (hover blocked by outer Content openOnHover=false)
@@ -306,15 +314,17 @@ describe("cascading settings context", () => {
   test("no settings anywhere preserves armed state machine behavior", async () => {
     render(<CascadingMenu />);
     // No openOnHover set anywhere. Hover should not open (not armed)
-    await act(() => { fireEvent.mouseEnter(screen.getByText("File")); });
+    const file = screen.getByText("File");
+    await act(() => { fireEvent.mouseEnter(file); fireEvent.mouseMove(file); });
     expect(getPath()).toEqual([]);
 
     // Click to open — this arms the state machine
-    await act(() => { fireEvent.click(screen.getByText("File")); });
+    await act(() => { fireEvent.click(file); });
     expect(getPath()).toEqual(["file"]);
 
     // Now hover Edit — should open because armed
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Edit")); });
+    const edit = screen.getByText("Edit");
+    await act(() => { fireEvent.mouseEnter(edit); fireEvent.mouseMove(edit); });
     expect(getPath()).toEqual(["edit"]);
   });
 });
@@ -496,7 +506,8 @@ describe("Close component", () => {
     render(<CloseMenu />);
     // Open About > Facts
     await act(() => { fireEvent.click(screen.getByText("About")); });
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    const facts = screen.getByText("Facts");
+    await act(() => { fireEvent.mouseEnter(facts); fireEvent.mouseMove(facts); });
     expect(getPath()).toEqual(["about", "facts"]);
 
     // Click Close Facts (target="current")
@@ -690,7 +701,8 @@ describe("safe triangle integration", () => {
     expect(getPath()).toEqual(["about"]);
 
     // Open Facts submenu
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    const facts = screen.getByText("Facts");
+    await act(() => { fireEvent.mouseEnter(facts); fireEvent.mouseMove(facts); });
     expect(getPath()).toEqual(["about", "facts"]);
 
     // Hover Overview — should close Facts (no safe triangle)
@@ -708,7 +720,8 @@ describe("safe triangle integration", () => {
     expect(getPath()).toEqual(["about"]);
 
     // Open Facts submenu
-    await act(() => { fireEvent.mouseEnter(screen.getByText("Facts")); });
+    const facts = screen.getByText("Facts");
+    await act(() => { fireEvent.mouseEnter(facts); fireEvent.mouseMove(facts); });
     expect(getPath()).toEqual(["about", "facts"]);
 
     // Hover Overview with default coords (0,0) — safe triangle check runs

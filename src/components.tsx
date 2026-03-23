@@ -316,21 +316,29 @@ export function Trigger({
     [ctx, value, depth, isOpen],
   );
 
-  // 6.3 — Hover: mouseenter cancels hide timer, opens if armed
+  // 6.3 — Hover: mouseenter cancels hide timer
   const handleMouseEnter = useCallback(
-    (e: React.MouseEvent) => {
+    () => {
       if (ctx.hideTimeout.current) {
         clearTimeout(ctx.hideTimeout.current);
         ctx.hideTimeout.current = null;
       }
-      // effectiveOpenOnHover: true = always hover, false = never hover, undefined = armed state
+    },
+    [ctx],
+  );
+
+  // 6.3 — Hover: mousemove opens if armed (re-checks safe triangle continuously)
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      // Already open for this trigger, nothing to do
+      if (ctx.openPath[depth] === value) return;
+
       if (effectiveOpenOnHover === false) return;
       if (effectiveOpenOnHover === true || ctx.armed || ctx.openPath.length > 0) {
         // Safe triangle: suppress switch if cursor is inside the triangle toward open submenu
         if (
           ctx.safeTriangle?.enabled &&
           ctx.openPath[depth] &&
-          ctx.openPath[depth] !== value &&
           ctx.safeTriangle.isInsideTriangle(e.clientX, e.clientY)
         ) {
           return;
@@ -368,6 +376,7 @@ export function Trigger({
     "data-value": value,
     onClick: handleClick,
     onMouseEnter: handleMouseEnter,
+    onMouseMove: handleMouseMove,
     onMouseLeave: handleMouseLeave,
     children,
   };

@@ -93,23 +93,8 @@ export function computeTrianglePoints(
  * use that child's rect instead of the content element's rect.
  */
 function resolveTargetRect(contentEl: HTMLElement): DOMRect {
-  // 1. Explicit anchor takes priority
   const anchor = contentEl.querySelector<HTMLElement>(SAFE_TRIANGLE_ANCHOR_SELECTOR);
   if (anchor) return anchor.getBoundingClientRect();
-
-  // 2. Auto-adjust: use the first menuitem's top to skip padding/spacing
-  //    that pushes links down inside the content element.
-  const firstItem = contentEl.querySelector<HTMLElement>('[role="menuitem"]');
-  if (firstItem) {
-    const contentRect = contentEl.getBoundingClientRect();
-    const itemRect = firstItem.getBoundingClientRect();
-    return new DOMRect(
-      contentRect.left,
-      itemRect.top,
-      contentRect.width,
-      contentRect.bottom - itemRect.top,
-    );
-  }
 
   return contentEl.getBoundingClientRect();
 }
