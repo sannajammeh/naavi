@@ -452,7 +452,11 @@ function LiveClose() {
 function LiveFull() {
   return (
     <div className="example-wrapper">
-      <NavigationMenu.Root openOnHover={true} aria-label="Full example">
+      <NavigationMenu.Root
+        debugSafeTriangle
+        openOnHover={true}
+        aria-label="Full example"
+      >
         <NavigationMenu.List>
           <NavigationMenu.Item value="home">
             <NavigationMenu.Link href="#home">Home</NavigationMenu.Link>
