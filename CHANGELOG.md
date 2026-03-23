@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.0](https://github.com/sannajammeh/naavi/compare/v0.3.1...v0.4.0) (2026-03-23)
+
+### Features
+
+* safe triangle system + explicit anchor targeting ([#3](https://github.com/sannajammeh/naavi/issues/3)) ([742bec8](https://github.com/sannajammeh/naavi/commit/742bec8d934bcab46c57b0e99468144f6017f80d))
+
+### Documentation
+
+* document Close component ([062d866](https://github.com/sannajammeh/naavi/commit/062d8664351535becbf747cfdd72c120d0a77b52))
+
 ## [0.3.1](https://github.com/sannajammeh/naavi/compare/v0.2.2...v0.3.1) (2026-02-20)
 
 ### Features
