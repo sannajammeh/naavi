@@ -14,6 +14,14 @@ export interface OpenState {
 // Context Types
 // ---------------------------------------------------------------------------
 
+export interface SafeTriangleContextValue {
+  isInsideTriangle: (x: number, y: number) => boolean;
+  setContentEl: (value: string, el: HTMLElement | null) => void;
+  setOrigin: (x: number, y: number) => void;
+  updateCursor: (x: number, y: number) => void;
+  enabled: boolean;
+}
+
 export interface RootContextValue {
   openPath: string[];
   setOpenPath: (path: string[]) => void;
@@ -26,6 +34,7 @@ export interface RootContextValue {
   navRef: RefObject<HTMLElement | null>;
   viewport: HTMLElement | null;
   setViewport: (el: HTMLElement | null) => void;
+  safeTriangle: SafeTriangleContextValue;
 }
 
 export interface SettingsContextValue {
@@ -66,6 +75,10 @@ export interface RootProps
   closeOnClick?: boolean;
   /** Whether blur closes all menus. @default true */
   hideOnBlur?: boolean;
+  /** Whether safe triangle hover zone is enabled. @default true */
+  safeTriangle?: boolean;
+  /** Whether to render the debug safe triangle overlay with color. @default false */
+  debugSafeTriangle?: boolean;
 }
 
 export interface ListProps extends useRender.ComponentProps<"ul"> {

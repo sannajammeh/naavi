@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Root,
   List,
@@ -7,8 +8,21 @@ import {
   Link,
   Separator,
 } from "../src/index.ts";
+import { Store } from "./Store.tsx";
 
 export function App() {
+  const [page, setPage] = useState(window.location.hash);
+
+  useEffect(() => {
+    const onHashChange = () => setPage(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  if (page === "#store") {
+    return <Store />;
+  }
+
   return (
     <div className="page">
       <header>
@@ -16,7 +30,7 @@ export function App() {
         <div className="tagline">Navigation Menu Component Playground</div>
       </header>
 
-      <Root aria-label="Mythical University">
+      <Root aria-label="Mythical University" debugSafeTriangle>
         <List>
           {/* Home — simple link, no submenu */}
           <Item value="home">
@@ -60,7 +74,9 @@ export function App() {
                 </Trigger>
                 <Content aria-label="Campus Tours">
                   <Item value="for-prospective-students">
-                    <Link href="#for-prospective-students">For prospective students</Link>
+                    <Link href="#for-prospective-students">
+                      For prospective students
+                    </Link>
                   </Item>
                   <Item value="for-alumni">
                     <Link href="#for-alumni">For alumni</Link>
@@ -96,7 +112,9 @@ export function App() {
                     <Link href="#graduate">Graduate</Link>
                   </Item>
                   <Item value="professional-schools">
-                    <Link href="#professional-schools">Professional Schools</Link>
+                    <Link href="#professional-schools">
+                      Professional Schools
+                    </Link>
                   </Item>
                 </Content>
               </Item>
@@ -157,7 +175,8 @@ export function App() {
         <section>
           <h1 className="page-title">Mythical University</h1>
           <p className="content">
-            Navigate the menu above using keyboard or mouse to test the component.
+            Navigate the menu above using keyboard or mouse to test the
+            component.
           </p>
         </section>
       </div>
