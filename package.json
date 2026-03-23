@@ -57,7 +57,7 @@
   ],
   "scripts": {
     "build": "bunchee",
-    "dev": "frunk [dev:*]",
+    "dev": "bunx frunk [dev:*]",
     "dev:library": "bun --hot playground/server.ts",
     "dev:docs": "bun --hot docs/server.tsx",
     "dev:reference": "PORT=3001  bun run wai-aria-spec/index.html",
